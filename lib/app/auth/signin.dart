@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:tp1/app/utils/app_theme.dart';
+import 'package:tp1/app/DTO/signin_request.dart';
+import 'package:tp1/app/services/api_service.dart' as api;
 
 class Signin extends StatefulWidget {
   const Signin({super.key});
@@ -9,6 +11,18 @@ class Signin extends StatefulWidget {
 }
 
 class SigninState extends State<Signin> {
+  SigninRequest signinRequest = SigninRequest();
+  final username = TextEditingController();
+  final password = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    username.dispose();
+    password.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,12 +36,12 @@ class SigninState extends State<Signin> {
           children: [
             Column( //text fields
               children: [
-                const Row( //username field
+                Row( //username field
                   children: [
                     Expanded(
                       child: TextField(
-                        obscureText: true,
-                        decoration: InputDecoration(
+                        controller: username,
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Username',
                         ),
@@ -38,12 +52,13 @@ class SigninState extends State<Signin> {
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                 ),
-                const Row( //password field
+                Row( //password field
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: password,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Password',
                         ),
@@ -60,9 +75,24 @@ class SigninState extends State<Signin> {
                       width: 150,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.pushNamed(context, '/home');
+                        onPressed: () async {
+                          try{
+                            signinRequest.username = username.text;
+                            signinRequest.password = password.text;
+                            var response = await api.signin(signinRequest);
+                            if (response.username != null){
+                              Navigator.of(context).pop();
+                              Navigator.pushNamed(context, '/home');
+                            }
+                          }on DioException catch (e) {
+                            print(e);
+                            String message = e.response!.data;
+                            if (message == "BadCredentialsException") {
+                              print('login deja utilise');
+                            } else {
+                              print('autre erreurs');
+                            }
+                          }
                         },
                         child: const Text('Login', style: TextStyle(color: Colors.white),),
                       ),

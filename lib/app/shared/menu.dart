@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/task/create.dart';
+import 'package:tp1/app/services/api_service.dart' as api;
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -52,14 +54,25 @@ class MenuState extends State<Menu> {
           dense: true,
           leading: const Icon(Icons.logout),
           title: const Text("Déconnexion"),
-          onTap: () {
-            Navigator.of(context).pop();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Signin(),
-              ),
-            );
+          onTap: () async {
+            try{
+              var response = await api.signout();
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Signin(),
+                ),
+              );
+            }on DioException catch (e) {
+              print(e);
+              String message = e.response!.data;
+              if (message == "BadCredentialsException") {
+                print('login deja utilise');
+              } else {
+                print('autre erreurs');
+              }
+            }
           },
         ),
       ],
