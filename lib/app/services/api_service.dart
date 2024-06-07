@@ -15,7 +15,8 @@ Future<SigninResponse> signup(SignupRequest req) async {
     var response = await SingletonDio.getDio()
         .post('http://10.0.2.2:8080/api/id/signup', data: req.toJson());
     print(response);
-    user = response.data.toString();
+    var text = response.toString();
+    user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
     return SigninResponse.fromJson(response.data);
   } catch (e) {
     print(e);
