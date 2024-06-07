@@ -9,11 +9,13 @@ import 'package:tp1/app/DTO/signup_request.dart';
 import 'package:tp1/app/models/task.dart';
 
 String user = "erreur";
+String serverAddress = "http://10.0.2.2:8080";
+String renderAddress = "https://kickmya-sserver.onrender.com";
 
 Future<SigninResponse> signup(SignupRequest req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('http://10.0.2.2:8080/api/id/signup', data: req.toJson());
+        .post('$renderAddress/api/id/signup', data: req.toJson());
     print(response);
     var text = response.toString();
     user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
@@ -27,7 +29,7 @@ Future<SigninResponse> signup(SignupRequest req) async {
 Future<SigninResponse> signin(SigninRequest req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('http://10.0.2.2:8080/api/id/signin', data: req.toJson());
+        .post('$renderAddress/api/id/signin', data: req.toJson());
     var text = response.toString();
     user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
     print(response);
@@ -41,7 +43,7 @@ Future<SigninResponse> signin(SigninRequest req) async {
 Future<void> signout() async {
   try {
     var response = await SingletonDio.getDio()
-        .post('http://10.0.2.2:8080/api/id/signout');
+        .post('$renderAddress/api/id/signout');
   } catch (e) {
     print(e);
     rethrow;
@@ -51,7 +53,7 @@ Future<void> signout() async {
 Future<void> update(int id, int value) async {
   try {
     var response = await SingletonDio.getDio()
-        .get('http://10.0.2.2:8080/api/progress/$id/$value');
+        .get('$renderAddress/api/progress/$id/$value');
   } catch (e) {
     print(e);
     rethrow;
@@ -61,7 +63,7 @@ Future<void> update(int id, int value) async {
 Future<List<Task>> getTasks() async {
   try {
     var response = await SingletonDio.getDio()
-        .get('http://10.0.2.2:8080/api/home');
+        .get('$renderAddress/api/home');
     List<Task> test = [];
     for (var task in response.data){
       test.add(Task.fromJson(task));
@@ -76,7 +78,7 @@ Future<List<Task>> getTasks() async {
 Future<Task> getDetail(int id) async {
   try {
     var response = await SingletonDio.getDio()
-        .get('http://10.0.2.2:8080/api/detail/$id');
+        .get('$renderAddress/api/detail/$id');
     return Task.fromJson(response.data);
   } catch (e) {
     print(e);
@@ -87,7 +89,7 @@ Future<Task> getDetail(int id) async {
 Future<void> addTask(AddTask req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('http://10.0.2.2:8080/api/add', data: req.toJson());
+        .post('$renderAddress/api/add', data: req.toJson());
   } catch (e) {
     print(e);
     rethrow;
