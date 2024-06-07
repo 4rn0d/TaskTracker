@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tp1/app/DTO/signup_request.dart';
+import 'package:tp1/app/auth/signin.dart';
+import 'package:tp1/app/home.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 
 class Signup extends StatefulWidget {
@@ -98,8 +100,11 @@ class SignupState extends State<Signup> {
                               signupRequest.password = password.text;
                               var response = await api.signup(signupRequest);
                               if (response.username != null){
-                                Navigator.of(context).pop();
-                                Navigator.pushNamed(context, '/home');
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => const Home(),
+                                    )
+                                );
                               }
                             }on DioException catch (e) {
                               print(e);
@@ -117,8 +122,11 @@ class SignupState extends State<Signup> {
                       SizedBox(
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.pushNamed(context, '/login');
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const Signin(),
+                              )
+                            );
                           },
                           child: const Text('Login'),
                         ),

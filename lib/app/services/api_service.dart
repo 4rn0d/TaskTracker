@@ -8,11 +8,14 @@ import 'package:tp1/app/DTO/signin_response.dart';
 import 'package:tp1/app/DTO/signup_request.dart';
 import 'package:tp1/app/models/task.dart';
 
+String user = "erreur";
+
 Future<SigninResponse> signup(SignupRequest req) async {
   try {
     var response = await SingletonDio.getDio()
         .post('http://10.0.2.2:8080/api/id/signup', data: req.toJson());
     print(response);
+    user = response.data.toString();
     return SigninResponse.fromJson(response.data);
   } catch (e) {
     print(e);
@@ -24,6 +27,8 @@ Future<SigninResponse> signin(SigninRequest req) async {
   try {
     var response = await SingletonDio.getDio()
         .post('http://10.0.2.2:8080/api/id/signin', data: req.toJson());
+    var text = response.toString();
+    user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
     print(response);
     return SigninResponse.fromJson(response.data);
   } catch (e) {
@@ -42,6 +47,16 @@ Future<void> signout() async {
   }
 }
 
+Future<void> update(int id, int value) async {
+  try {
+    var response = await SingletonDio.getDio()
+        .get('http://10.0.2.2:8080/api/progress/$id/$value');
+  } catch (e) {
+    print(e);
+    rethrow;
+  }
+}
+
 Future<List<Task>> getTasks() async {
   try {
     var response = await SingletonDio.getDio()
@@ -51,6 +66,17 @@ Future<List<Task>> getTasks() async {
       test.add(Task.fromJson(task));
     }
     return test;
+  } catch (e) {
+    print(e);
+    rethrow;
+  }
+}
+
+Future<Task> getDetail(int id) async {
+  try {
+    var response = await SingletonDio.getDio()
+        .get('http://10.0.2.2:8080/api/detail/$id');
+    return Task.fromJson(response.data);
   } catch (e) {
     print(e);
     rethrow;

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tp1/app/DTO/add_task.dart';
+import 'package:tp1/app/home.dart';
 import 'package:tp1/app/shared/menu.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 
@@ -86,8 +87,11 @@ class CreateState extends State<Create> {
                         addTask.deadline = formatedDate;
                         var response = api.addTask(addTask);
                         if (response != null){
-                          Navigator.of(context).pop();
-                          Navigator.pushNamed(context, '/home');
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const Home(),
+                            )
+                          );
                         }
                       }on DioException catch (e) {
                         print(e);

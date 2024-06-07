@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tp1/app/models/task.dart';
 import 'package:tp1/app/shared/menu.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
+import 'package:tp1/app/task/create.dart';
+import 'package:tp1/app/task/details.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -39,8 +41,11 @@ class HomeState extends State<Home> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.pushNamed(context, '/create');
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const Create(),
+                )
+            );
           },
           child: const Icon(Icons.add),
         ),
@@ -52,8 +57,13 @@ class HomeState extends State<Home> {
               return Card(
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.pushNamed(context, '/details');
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => Details(
+                          id: tasks[i].id,
+                        ),
+                      )
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10),
@@ -66,7 +76,7 @@ class HomeState extends State<Home> {
                         ),
                         Row(
                           children: [
-                            Text("Progression de la tâche : ${tasks[i].percentageDone}"),
+                            Text("Progression de la tâche : ${tasks[i].percentageDone}%"),
                           ],
                         ),
                         Row(
@@ -76,7 +86,7 @@ class HomeState extends State<Home> {
                         ),
                         Row(
                           children: [
-                            Text("pourcentage de temp écoulé : ${tasks[i].percentageTimeSpent}"),
+                            Text("pourcentage de temp écoulé : ${tasks[i].percentageTimeSpent.round()}%"),
                           ],
                         ),
                       ],

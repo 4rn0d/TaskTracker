@@ -15,19 +15,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const Signin(),
-      routes: routes(),
+    return const MaterialApp(
+      home: Signin(),
     );
-  }
-
-  Map<String, WidgetBuilder> routes() {
-    return {
-      '/login': (context) => const Signin(),
-      '/signup': (context) => const Signup(),
-      '/home': (context) => const Home(),
-      '/details': (context) => const Details(),
-      '/create': (context) => const Create(),
-    };
   }
 }
