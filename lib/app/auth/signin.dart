@@ -107,12 +107,16 @@ class SigninState extends State<Signin> {
                             }
                             _isButtonDisabled = false;
                           }on DioException catch (e) {
-                            print(e);
-                            String message = e.response!.data;
-                            if (message == "BadCredentialsException") {
-                              print('login deja utilise');
-                            } else {
-                              print('autre erreurs');
+                            setState(() {
+                              _isButtonDisabled = false;
+                            });
+                            if (e.message!.contains('connection errored')) {
+                              var snackBar = const SnackBar(
+                                content: Text("Une erreur réseau est survenue.", style: TextStyle(color: Colors.white),),
+                                backgroundColor: Colors.red,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              return;
                             }
                           }
                         }: null,

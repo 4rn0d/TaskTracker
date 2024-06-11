@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tp1/app/home.dart';
@@ -93,9 +94,18 @@ class DetailsState extends State<Details> {
                                 builder: (context) => const Home(),
                               )
                           );
-                        }catch (e) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(content: Text('Erreur reseau')));
+                        }on DioException catch (e) {
+                          setState(() {
+                            _isButtonDisabled = false;
+                          });
+                          if (e.message!.contains('connection errored')) {
+                            var snackBar = const SnackBar(
+                              content: Text("Une erreur réseau est survenue.", style: TextStyle(color: Colors.white),),
+                              backgroundColor: Colors.red,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            return;
+                          }
                         }
                       }: null,
                       child: const Text("Mise à jour du progrès", style: TextStyle(color: Colors.white),)

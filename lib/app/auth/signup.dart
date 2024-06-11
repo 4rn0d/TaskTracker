@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tp1/app/DTO/signup_request.dart';
@@ -143,12 +145,27 @@ class SignupState extends State<Signup> {
                               }
                               _isButtonDisabled = false;
                             }on DioException catch (e) {
-                              print(e);
+                              setState(() {
+                                _isButtonDisabled = false;
+                              });
+                              if (e.message!.contains('connection errored')) {
+                                var snackBar = const SnackBar(
+                                  content: Text("Une erreur réseau est survenue.", style: TextStyle(color: Colors.white),),
+                                  backgroundColor: Colors.red,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                return;
+                              }
                               String message = e.response!.data;
-                              if (message == "BadCredentialsException") {
-                                print('login deja utilise');
-                              } else {
-                                print('autre erreurs');
+                              if (message == "UsernameAlreadyTaken") {
+                                var snackBar = const SnackBar(
+                                  content: Text("Le nom d'utilisateur n'est pas disponible.", style: TextStyle(color: Colors.white),),
+                                  backgroundColor: Colors.red,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              }
+                              else {
+                                print(message);
                               }
                             }
                           }: null,

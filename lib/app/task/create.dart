@@ -110,7 +110,12 @@ class CreateState extends State<Create> {
                         if (!_validateTaskName) {
                           AddTask addTask = AddTask();
                           addTask.name = _taskNameController.text;
-                          addTask.deadline = _dateController.text;
+                          if (_dateController.text == ""){
+                            addTask.deadline = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                          }
+                          else{
+                            addTask.deadline = _dateController.text;
+                          }
                           var response = await api.addTask(addTask);
                           _isButtonDisabled = false;
                           Navigator.of(context).pushReplacement(
@@ -122,6 +127,17 @@ class CreateState extends State<Create> {
                         _isButtonDisabled = false;
 
                       }on DioException catch (e) {
+                        setState(() {
+                          _isButtonDisabled = false;
+                        });
+                        if (e.message!.contains('connection errored')) {
+                          var snackBar = const SnackBar(
+                            content: Text("Une erreur réseau est survenue.", style: TextStyle(color: Colors.white),),
+                            backgroundColor: Colors.red,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          return;
+                        }
                         print(e);
                         String message = e.response!.data;
                         if (message == "BadCredentialsException") {

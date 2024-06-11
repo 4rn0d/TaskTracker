@@ -17,20 +17,30 @@ class HomeState extends State<Home> {
 
   List<Task> tasks = [];
 
-  void getTasks() async{
+  void _getTasks() async{
     try {
       tasks = await api.getTasks();
       setState(() {});
-    }catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Erreur reseau')));
+    } catch(e){
+      var snackBar = SnackBar(
+        content: const Text("Une erreur réseaux est survenue.", style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.red,
+        duration: const Duration(days: 365),
+        action: SnackBarAction(
+        label: 'Réessayer',
+        onPressed: () {
+          _getTasks();
+        },
+      ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    getTasks();
+    _getTasks();
   }
 
   @override
