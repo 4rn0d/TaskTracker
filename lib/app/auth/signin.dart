@@ -79,10 +79,14 @@ class SigninState extends State<Signin> {
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                         onPressed: () async {
                           try{
+                            setState(() {
+                              api.isLoading = true;
+                            });
                             signinRequest.username = username.text;
                             signinRequest.password = password.text;
                             var response = await api.signin(signinRequest);
                             if (response.username != null){
+                              api.isLoading = false;
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => const Home(),

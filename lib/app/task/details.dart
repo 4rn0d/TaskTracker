@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/models/task.dart';
 import 'package:tp1/app/shared/menu.dart';
@@ -18,7 +19,7 @@ class DetailsState extends State<Details> {
   Task task = Task(id: 0, name: "",  percentageDone: 0, percentageTimeSpent: 0, deadline: DateTime.now());
   double currentSliderValue = 0;
 
-  void getDetails() async{
+  void _getDetails() async{
     try {
       task = await api.getDetail(widget.id);
       currentSliderValue = task.percentageDone.toDouble();
@@ -31,10 +32,11 @@ class DetailsState extends State<Details> {
 
   @override
   void initState() {
-    getDetails();
+    _getDetails();
     super.initState();
   }
 
+  bool isButtonDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,65 +45,83 @@ class DetailsState extends State<Details> {
       appBar: AppBar(
         title: const Text('Details'),
       ),
-      body: Padding(
+      body: !api.isLoading
+      ? Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 160,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Nom : ${task.name}"),
-                  Text("Deadline : ${task.deadline}"),
-                  Text("Pourcentage de temps écoulé : ${task.percentageTimeSpent.round()}%"),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Slider(
-                          value: currentSliderValue,
-                          max: 100,
-                          divisions: 100,
-                          label: currentSliderValue.round().toString(),
-                          onChanged: (double value) {
-                            setState(() {
-                              currentSliderValue = value;
-                            });
-                          },
-                        ),
-                      ),
-                      Text("${currentSliderValue.round()}%"),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                        onPressed: () async{
-                          try {
-                            var response = await api.update(widget.id, currentSliderValue.toInt());
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                )
-                            );
-                          }catch (e) {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(content: Text('Erreur reseau')));
-                          }
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 160,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Nom : ${task.name}"),
+                Text("Deadline : ${DateFormat.yMMMMd().format(task.deadline)}"),
+                Text("Pourcentage de temps écoulé : ${task.percentageTimeSpent.round()}%"),
+                Row(
+                  children: [
+                    Expanded(
+                      child: !isButtonDisabled
+                      ? Slider(
+                        value: currentSliderValue,
+                        max: 100,
+                        divisions: 100,
+                        label: currentSliderValue.round().toString(),
+                        onChanged: (double value) {
+                          setState(() {
+                            currentSliderValue = value;
+                          });
                         },
-                        child: const Text("Mise à jour du progrès", style: TextStyle(color: Colors.white),)
-                      ),
-                    ],
-                  )
-                ]
-              ),
+                      ):
+                      Slider(
+                        value: currentSliderValue,
+                        max: 100,
+                        divisions: 100,
+                        label: currentSliderValue.round().toString(),
+                        onChanged: null,
+                      )
+                    ),
+                    Text("${currentSliderValue.round()}%"),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    !isButtonDisabled
+                    ? ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+                      onPressed: () async{
+                        try {
+                          setState(() {
+                            isButtonDisabled = true;
+                          });
+                          var response = await api.update(widget.id, currentSliderValue.toInt());
+                          isButtonDisabled = false;
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const Home(),
+                              )
+                          );
+                        }catch (e) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(content: Text('Erreur reseau')));
+                        }
+                      },
+                      child: const Text("Mise à jour du progrès", style: TextStyle(color: Colors.white),)
+                    ):
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.white70),
+                        onPressed: (){},
+                        child: const Text("Mise à jour du progrès", style: TextStyle(color: Colors.grey),)
+                      )
+                  ],
+                )
+              ]
             ),
           ),
         ),
-      ),
+      ):
+          const LinearProgressIndicator()
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:tp1/app/models/task.dart';
 String user = "erreur";
 String serverAddress = "http://10.0.2.2:8080";
 String renderAddress = "https://kickmya-sserver.onrender.com";
+bool isLoading = false;
 
 Future<SigninResponse> signup(SignupRequest req) async {
   try {
@@ -62,12 +63,14 @@ Future<void> update(int id, int value) async {
 
 Future<List<Task>> getTasks() async {
   try {
+    isLoading = true;
     var response = await SingletonDio.getDio()
         .get('$renderAddress/api/home');
     List<Task> test = [];
     for (var task in response.data){
       test.add(Task.fromJson(task));
     }
+    isLoading = false;
     return test;
   } catch (e) {
     print(e);
@@ -77,8 +80,10 @@ Future<List<Task>> getTasks() async {
 
 Future<Task> getDetail(int id) async {
   try {
+    isLoading = true;
     var response = await SingletonDio.getDio()
         .get('$renderAddress/api/detail/$id');
+    isLoading = false;
     return Task.fromJson(response.data);
   } catch (e) {
     print(e);

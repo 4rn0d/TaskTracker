@@ -31,7 +31,8 @@ class SignupState extends State<Signup> {
         appBar: AppBar(
           title: const Text('Sign Up'),
         ),
-        body: Padding(
+        body: !api.isLoading
+        ? Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -96,10 +97,14 @@ class SignupState extends State<Signup> {
                           style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                           onPressed: () async {
                             try{
+                              setState(() {
+                                api.isLoading = true;
+                              });
                               signupRequest.username = username.text;
                               signupRequest.password = password.text;
                               var response = await api.signup(signupRequest);
                               if (response.username != null){
+                                api.isLoading = false;
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) => const Home(),
@@ -137,7 +142,8 @@ class SignupState extends State<Signup> {
               ),
             ],
           ),
-        )
+        ):
+            const LinearProgressIndicator()
     );
   }
 }

@@ -78,7 +78,11 @@ class MenuState extends State<Menu> {
           title: const Text("Déconnexion"),
           onTap: () async {
             try{
+              setState(() {
+                api.isLoading = true;
+              });
               var response = await api.signout();
+              api.isLoading = false;
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => const Signin(),

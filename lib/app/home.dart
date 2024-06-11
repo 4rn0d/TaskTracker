@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tp1/app/models/task.dart';
 import 'package:tp1/app/shared/menu.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
@@ -49,7 +50,8 @@ class HomeState extends State<Home> {
           },
           child: const Icon(Icons.add),
         ),
-        body: Padding(
+        body: !api.isLoading
+        ? Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.builder(
             itemCount: tasks.length,
@@ -81,7 +83,7 @@ class HomeState extends State<Home> {
                         ),
                         Row(
                           children: [
-                            Text("Date d'échéance : ${tasks[i].deadline}"),
+                            Text("Date d'échéance : ${DateFormat.yMMMMd().format(tasks[i].deadline)}"),
                           ],
                         ),
                         Row(
@@ -96,7 +98,8 @@ class HomeState extends State<Home> {
               );
             },
           )
-        ),
+        ):
+            const LinearProgressIndicator()
     );
   }
 }

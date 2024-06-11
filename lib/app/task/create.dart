@@ -14,16 +14,19 @@ class Create extends StatefulWidget {
 }
 
 class CreateState extends State<Create> {
-  final taskName = TextEditingController();
+  final _taskNameController = TextEditingController();
+
+  final RestorableDateTime _selectedDate =
+  RestorableDateTime(DateTime.now());
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    taskName.dispose();
+    _taskNameController.dispose();
     super.dispose();
   }
 
-  DateTime? newDate = DateTime.now();
+  final _dateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,67 +35,83 @@ class CreateState extends State<Create> {
         appBar: AppBar(
           title: const Text('Création'),
         ),
-        body: Padding(
-          padding: EdgeInsets.all(16.0),
+        body: !api.isLoading
+        ? Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: taskName,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Nom de la tâche',
-                                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _taskNameController,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.title),
+                                border: OutlineInputBorder(),
+                                labelText: 'Nom de la tâche',
                               ),
                             ),
-                          ],
-                        ),
-                        Padding(padding: EdgeInsets.all(10)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                              onPressed: () async {
-                                newDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime(2100, 12, 31),
-                                  helpText: 'Select a date',
-                                );
-                              },
-                              child: Text("${newDate?.day}/${newDate?.month}/${newDate?.year}", style: TextStyle(color: Colors.white)),
+                          ),
+                        ],
+                      ),
+                      const Padding(padding: EdgeInsets.all(10)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: TextField(
+                                controller: _dateController,
+                                decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.calendar_today),
+                                    border: OutlineInputBorder(),
+                                    labelText: "Enter Date"
+                                ),
+                                readOnly: true,
+                                onTap: () async {
+                                  DateTime? pickedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate:DateTime.now(),
+                                      lastDate: DateTime(2101)
+                                  );
+                                  if(pickedDate != null ){
+                                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                    setState(() {
+                                      _dateController.text = formattedDate;
+                                    });
+                                  }else{
+                                    print("Date is not selected");
+                                  }
+                                }
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                     onPressed: () async {
                       try{
-                        String formatedDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(newDate!);
+                        setState(() {
+                          api.isLoading = true;
+                        });
                         AddTask addTask = AddTask();
-                        addTask.name = taskName.text;
-                        addTask.deadline = formatedDate;
-                        var response = api.addTask(addTask);
-                        if (response != null){
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const Home(),
-                            )
-                          );
-                        }
+                        addTask.name = _taskNameController.text;
+                        addTask.deadline = _dateController.text;
+                        var response = await api.addTask(addTask);
+                        api.isLoading = false;
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          )
+                        );
                       }on DioException catch (e) {
                         print(e);
                         String message = e.response!.data;
@@ -103,11 +122,12 @@ class CreateState extends State<Create> {
                         }
                       }
                     },
-                    child: Text("Créer")
+                    child: const Text("Créer", style: TextStyle(color: Colors.white),)
                 )
               ]
           ),
-        )
+        ):
+            const LinearProgressIndicator()
     );
   }
 }
