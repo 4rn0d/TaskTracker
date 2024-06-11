@@ -14,17 +14,23 @@ class Signup extends StatefulWidget {
 
 class SignupState extends State<Signup> {
   SignupRequest signupRequest = SignupRequest();
-  final username = TextEditingController();
-  final password = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    username.dispose();
-    password.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
+  bool _validateUsername = false;
+  bool _validatePassword = false;
+  bool _validateConfPassword = false;
+  bool _validatePasswordsAreEqual = true;
   bool _isButtonDisabled = false;
 
   @override
@@ -45,12 +51,13 @@ class SignupState extends State<Signup> {
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: username,
+                          controller: _usernameController,
                           obscureText: false,
                           enabled: !_isButtonDisabled,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
                             labelText: 'Username',
+                              errorText: _validateUsername ? "Le champ ne peut pas être vide" : null
                           ),
                         ),
                       ),
@@ -63,12 +70,13 @@ class SignupState extends State<Signup> {
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: password,
+                          controller: _passwordController,
                           enabled: !_isButtonDisabled,
                           obscureText: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
                             labelText: 'Password',
+                            errorText: _validatePassword ? "Le champ ne peut pas être vide" : null
                           ),
                         ),
                       ),
@@ -81,11 +89,15 @@ class SignupState extends State<Signup> {
                     children: [
                       Expanded(
                         child: TextField(
+                          controller: _confirmPasswordController,
                           obscureText: true,
                           enabled: !_isButtonDisabled,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
                             labelText: 'Confirm Password',
+                              errorText: _validateConfPassword ? "Le champ ne peut pas être vide" :
+                              !_validatePasswordsAreEqual ? "Le mot de passe entrer est différent du mot de passe" :
+                                  null,
                           ),
                         ),
                       ),
@@ -104,18 +116,32 @@ class SignupState extends State<Signup> {
                             try{
                               setState(() {
                                 _isButtonDisabled = true;
+                                _validateUsername = _usernameController.text.isEmpty;
+                                _validatePassword = _passwordController.text.isEmpty;
+                                _validateConfPassword = _confirmPasswordController.text.isEmpty;
+                                if (_passwordController.text == _confirmPasswordController.text){
+                                  _validatePasswordsAreEqual = true;
+                                }
+                                else{
+                                 _validatePasswordsAreEqual = false;
+                                }
                               });
-                              signupRequest.username = username.text;
-                              signupRequest.password = password.text;
-                              var response = await api.signup(signupRequest);
-                              if (response.username != null){
-                                _isButtonDisabled = false;
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => const Home(),
-                                    )
-                                );
+                              signupRequest.username = _usernameController.text;
+                              signupRequest.password = _passwordController.text;
+                              if (!_validatePassword && !_validateUsername && !_validateConfPassword){
+                                if (_passwordController.text == _confirmPasswordController.text) {
+                                  var response = await api.signup(signupRequest);
+                                  if (response.username != null){
+                                    _isButtonDisabled = false;
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => const Home(),
+                                        )
+                                    );
+                                  }
+                                }
                               }
+                              _isButtonDisabled = false;
                             }on DioException catch (e) {
                               print(e);
                               String message = e.response!.data;

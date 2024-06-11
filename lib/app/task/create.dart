@@ -28,6 +28,7 @@ class CreateState extends State<Create> {
 
   final _dateController = TextEditingController();
   bool _isButtonDisabled = false;
+  bool _validateTaskName = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +52,11 @@ class CreateState extends State<Create> {
                             child: TextField(
                               controller: _taskNameController,
                               enabled: !_isButtonDisabled,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.title),
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.title),
+                                border: const OutlineInputBorder(),
                                 labelText: 'Nom de la tâche',
+                                errorText: _validateTaskName ? 'le champ ne peut pas être vide':null
                               ),
                             ),
                           ),
@@ -68,10 +70,10 @@ class CreateState extends State<Create> {
                             child: TextField(
                                 controller: _dateController,
                                 enabled: !_isButtonDisabled,
-                                decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.calendar_today),
-                                    border: OutlineInputBorder(),
-                                    labelText: "Enter Date"
+                                decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.calendar_today),
+                                    border: const OutlineInputBorder(),
+                                    labelText:  DateFormat('yyyy-MM-dd').format(DateTime.now()),
                                 ),
                                 readOnly: true,
                                 onTap: () async {
@@ -103,17 +105,22 @@ class CreateState extends State<Create> {
                       try{
                         setState(() {
                           _isButtonDisabled = true;
+                          _validateTaskName = _taskNameController.text.isEmpty;
                         });
-                        AddTask addTask = AddTask();
-                        addTask.name = _taskNameController.text;
-                        addTask.deadline = _dateController.text;
-                        var response = await api.addTask(addTask);
+                        if (!_validateTaskName) {
+                          AddTask addTask = AddTask();
+                          addTask.name = _taskNameController.text;
+                          addTask.deadline = _dateController.text;
+                          var response = await api.addTask(addTask);
+                          _isButtonDisabled = false;
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const Home(),
+                            )
+                          );
+                        }
                         _isButtonDisabled = false;
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const Home(),
-                          )
-                        );
+
                       }on DioException catch (e) {
                         print(e);
                         String message = e.response!.data;

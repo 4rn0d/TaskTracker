@@ -14,17 +14,19 @@ class Signin extends StatefulWidget {
 
 class SigninState extends State<Signin> {
   SigninRequest signinRequest = SigninRequest();
-  final username = TextEditingController();
-  final password = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    username.dispose();
-    password.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
+  bool _validateUsername = false;
+  bool _validatePassword = false;
   bool _isButtonDisabled = false;
 
   @override
@@ -44,11 +46,12 @@ class SigninState extends State<Signin> {
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: username,
+                        controller: _usernameController,
                         enabled: !_isButtonDisabled,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Username',
+                            errorText: _validateUsername ? "Le champ ne peut pas être vide" : null
                         ),
                       ),
                     ),
@@ -61,12 +64,13 @@ class SigninState extends State<Signin> {
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: password,
+                        controller: _passwordController,
                         enabled: !_isButtonDisabled,
                         obscureText: true,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Password',
+                            errorText: _validatePassword ? "Le champ ne peut pas être vide" : null
                         ),
                       ),
                     ),
@@ -85,18 +89,23 @@ class SigninState extends State<Signin> {
                           try{
                             setState(() {
                               _isButtonDisabled = true;
+                              _validateUsername = _usernameController.text.isEmpty;
+                              _validatePassword = _passwordController.text.isEmpty;
                             });
-                            signinRequest.username = username.text;
-                            signinRequest.password = password.text;
-                            var response = await api.signin(signinRequest);
-                            if (response.username != null){
-                              _isButtonDisabled = false;
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                )
-                              );
+                            signinRequest.username = _usernameController.text;
+                            signinRequest.password = _passwordController.text;
+                            if (!_validatePassword && !_validateUsername) {
+                              var response = await api.signin(signinRequest);
+                              if (response.username != null){
+                                _isButtonDisabled = false;
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const Home(),
+                                  )
+                                );
+                              }
                             }
+                            _isButtonDisabled = false;
                           }on DioException catch (e) {
                             print(e);
                             String message = e.response!.data;
