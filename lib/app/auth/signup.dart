@@ -25,6 +25,8 @@ class SignupState extends State<Signup> {
     super.dispose();
   }
 
+  bool _isButtonDisabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +47,7 @@ class SignupState extends State<Signup> {
                         child: TextField(
                           controller: username,
                           obscureText: false,
+                          enabled: !_isButtonDisabled,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Username',
@@ -61,6 +64,7 @@ class SignupState extends State<Signup> {
                       Expanded(
                         child: TextField(
                           controller: password,
+                          enabled: !_isButtonDisabled,
                           obscureText: true,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -73,12 +77,13 @@ class SignupState extends State<Signup> {
                   const Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-                  const Row( //password field
+                  Row( //password field
                     children: [
                       Expanded(
                         child: TextField(
                           obscureText: true,
-                          decoration: InputDecoration(
+                          enabled: !_isButtonDisabled,
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Confirm Password',
                           ),
@@ -95,16 +100,16 @@ class SignupState extends State<Signup> {
                         width: 150,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                          onPressed: () async {
+                          onPressed: !_isButtonDisabled ? () async {
                             try{
                               setState(() {
-                                api.isLoading = true;
+                                _isButtonDisabled = true;
                               });
                               signupRequest.username = username.text;
                               signupRequest.password = password.text;
                               var response = await api.signup(signupRequest);
                               if (response.username != null){
-                                api.isLoading = false;
+                                _isButtonDisabled = false;
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) => const Home(),
@@ -120,19 +125,19 @@ class SignupState extends State<Signup> {
                                 print('autre erreurs');
                               }
                             }
-                          },
+                          }: null,
                           child: const Text('Signup', style: TextStyle(color: Colors.white),),
                         ),
                       ),
                       SizedBox(
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: !_isButtonDisabled ? () {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) => const Signin(),
                               )
                             );
-                          },
+                          }: null,
                           child: const Text('Login'),
                         ),
                       ),

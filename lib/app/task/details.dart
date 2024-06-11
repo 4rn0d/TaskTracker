@@ -36,7 +36,7 @@ class DetailsState extends State<Details> {
     super.initState();
   }
 
-  bool isButtonDisabled = false;
+  bool _isButtonDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -61,24 +61,16 @@ class DetailsState extends State<Details> {
                 Row(
                   children: [
                     Expanded(
-                      child: !isButtonDisabled
-                      ? Slider(
+                      child: Slider(
                         value: currentSliderValue,
                         max: 100,
                         divisions: 100,
                         label: currentSliderValue.round().toString(),
-                        onChanged: (double value) {
+                        onChanged: !_isButtonDisabled ?(double value) {
                           setState(() {
                             currentSliderValue = value;
                           });
-                        },
-                      ):
-                      Slider(
-                        value: currentSliderValue,
-                        max: 100,
-                        divisions: 100,
-                        label: currentSliderValue.round().toString(),
-                        onChanged: null,
+                        }: null
                       )
                     ),
                     Text("${currentSliderValue.round()}%"),
@@ -87,16 +79,15 @@ class DetailsState extends State<Details> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    !isButtonDisabled
-                    ? ElevatedButton(
+                    ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                      onPressed: () async{
+                      onPressed: !_isButtonDisabled ?  () async{
                         try {
                           setState(() {
-                            isButtonDisabled = true;
+                            _isButtonDisabled = true;
                           });
                           var response = await api.update(widget.id, currentSliderValue.toInt());
-                          isButtonDisabled = false;
+                          _isButtonDisabled = false;
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) => const Home(),
@@ -106,14 +97,9 @@ class DetailsState extends State<Details> {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(content: Text('Erreur reseau')));
                         }
-                      },
+                      }: null,
                       child: const Text("Mise à jour du progrès", style: TextStyle(color: Colors.white),)
-                    ):
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.white70),
-                        onPressed: (){},
-                        child: const Text("Mise à jour du progrès", style: TextStyle(color: Colors.grey),)
-                      )
+                    )
                   ],
                 )
               ]

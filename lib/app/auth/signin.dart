@@ -25,6 +25,8 @@ class SigninState extends State<Signin> {
     super.dispose();
   }
 
+  bool _isButtonDisabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +45,7 @@ class SigninState extends State<Signin> {
                     Expanded(
                       child: TextField(
                         controller: username,
+                        enabled: !_isButtonDisabled,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Username',
@@ -59,6 +62,7 @@ class SigninState extends State<Signin> {
                     Expanded(
                       child: TextField(
                         controller: password,
+                        enabled: !_isButtonDisabled,
                         obscureText: true,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -77,16 +81,16 @@ class SigninState extends State<Signin> {
                       width: 150,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                        onPressed: () async {
+                        onPressed: !_isButtonDisabled ? () async {
                           try{
                             setState(() {
-                              api.isLoading = true;
+                              _isButtonDisabled = true;
                             });
                             signinRequest.username = username.text;
                             signinRequest.password = password.text;
                             var response = await api.signin(signinRequest);
                             if (response.username != null){
-                              api.isLoading = false;
+                              _isButtonDisabled = false;
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => const Home(),
@@ -102,19 +106,19 @@ class SigninState extends State<Signin> {
                               print('autre erreurs');
                             }
                           }
-                        },
+                        }: null,
                         child: const Text('Login', style: TextStyle(color: Colors.white),),
                       ),
                     ),
                     SizedBox(
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: !_isButtonDisabled ? () {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => const Signup(),
                             )
                           );
-                        },
+                        }: null,
                         child: const Text('Signup'),
                       ),
                     ),

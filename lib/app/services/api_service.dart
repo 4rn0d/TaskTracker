@@ -16,7 +16,7 @@ bool isLoading = false;
 Future<SigninResponse> signup(SignupRequest req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signup', data: req.toJson());
+        .post('$serverAddress/api/id/signup', data: req.toJson());
     print(response);
     var text = response.toString();
     user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
@@ -30,7 +30,7 @@ Future<SigninResponse> signup(SignupRequest req) async {
 Future<SigninResponse> signin(SigninRequest req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signin', data: req.toJson());
+        .post('$serverAddress/api/id/signin', data: req.toJson());
     var text = response.toString();
     user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
     print(response);
@@ -44,7 +44,7 @@ Future<SigninResponse> signin(SigninRequest req) async {
 Future<void> signout() async {
   try {
     var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signout');
+        .post('$serverAddress/api/id/signout');
   } catch (e) {
     print(e);
     rethrow;
@@ -54,7 +54,7 @@ Future<void> signout() async {
 Future<void> update(int id, int value) async {
   try {
     var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/progress/$id/$value');
+        .get('$serverAddress/api/progress/$id/$value');
   } catch (e) {
     print(e);
     rethrow;
@@ -65,7 +65,7 @@ Future<List<Task>> getTasks() async {
   try {
     isLoading = true;
     var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/home');
+        .get('$serverAddress/api/home');
     List<Task> test = [];
     for (var task in response.data){
       test.add(Task.fromJson(task));
@@ -82,7 +82,7 @@ Future<Task> getDetail(int id) async {
   try {
     isLoading = true;
     var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/detail/$id');
+        .get('$serverAddress/api/detail/$id');
     isLoading = false;
     return Task.fromJson(response.data);
   } catch (e) {
@@ -94,7 +94,7 @@ Future<Task> getDetail(int id) async {
 Future<void> addTask(AddTask req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/add', data: req.toJson());
+        .post('$serverAddress/api/add', data: req.toJson());
   } catch (e) {
     print(e);
     rethrow;

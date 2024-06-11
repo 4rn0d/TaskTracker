@@ -27,6 +27,7 @@ class CreateState extends State<Create> {
   }
 
   final _dateController = TextEditingController();
+  bool _isButtonDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +36,7 @@ class CreateState extends State<Create> {
         appBar: AppBar(
           title: const Text('Création'),
         ),
-        body: !api.isLoading
-        ? Padding(
+        body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -50,6 +50,7 @@ class CreateState extends State<Create> {
                           Expanded(
                             child: TextField(
                               controller: _taskNameController,
+                              enabled: !_isButtonDisabled,
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.title),
                                 border: OutlineInputBorder(),
@@ -66,6 +67,7 @@ class CreateState extends State<Create> {
                           Expanded(
                             child: TextField(
                                 controller: _dateController,
+                                enabled: !_isButtonDisabled,
                                 decoration: const InputDecoration(
                                     prefixIcon: Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
@@ -97,16 +99,16 @@ class CreateState extends State<Create> {
                 ),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                    onPressed: () async {
+                    onPressed: !_isButtonDisabled ?  () async {
                       try{
                         setState(() {
-                          api.isLoading = true;
+                          _isButtonDisabled = true;
                         });
                         AddTask addTask = AddTask();
                         addTask.name = _taskNameController.text;
                         addTask.deadline = _dateController.text;
                         var response = await api.addTask(addTask);
-                        api.isLoading = false;
+                        _isButtonDisabled = false;
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => const Home(),
@@ -121,13 +123,12 @@ class CreateState extends State<Create> {
                           print('autre erreurs');
                         }
                       }
-                    },
+                    }: null,
                     child: const Text("Créer", style: TextStyle(color: Colors.white),)
                 )
               ]
           ),
-        ):
-            const LinearProgressIndicator()
+        ),
     );
   }
 }
