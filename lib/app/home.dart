@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tp1/app/models/task.dart';
@@ -79,28 +80,48 @@ class HomeState extends State<Home> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10),
-                    child: Column(
+                    child: Row(
                       children: [
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(tasks[i].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                            Row(
+                              children: [
+                                Text(tasks[i].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("Progression de la tâche : ${tasks[i].percentageDone}%"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("Date d'échéance : ${DateFormat.yMMMMd().format(tasks[i].deadline)}"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("pourcentage de temp écoulé : ${tasks[i].percentageTimeSpent.round()}%"),
+                              ],
+                            ),
                           ],
                         ),
-                        Row(
+                        Column(
                           children: [
-                            Text("Progression de la tâche : ${tasks[i].percentageDone}%"),
+                            SizedBox(
+                              width: 100,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                  child: tasks[i].photoId != 0 ? CachedNetworkImage(
+                                    imageUrl: "${api.serverAddress}/file/${tasks[i].photoId}",
+                                    placeholder: (context, url) => const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                  ): const Text("")
+                              ),
+                            )
                           ],
-                        ),
-                        Row(
-                          children: [
-                            Text("Date d'échéance : ${DateFormat.yMMMMd().format(tasks[i].deadline)}"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text("pourcentage de temp écoulé : ${tasks[i].percentageTimeSpent.round()}%"),
-                          ],
-                        ),
+                        )
                       ],
                     ),
                   ),

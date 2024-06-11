@@ -2,19 +2,12 @@ import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 class Task {
-  late int id = 0;
-  late String name = "";
-  late int percentageDone = 0;
-  late double percentageTimeSpent = 0;
-  late DateTime deadline = DateTime.now();
-
-  Task({
-    required this.id,
-    required this.name,
-    required this.percentageDone,
-    required this.percentageTimeSpent,
-    required this.deadline,
-  });
+  late int id;
+  late String name;
+  late int percentageDone;
+  late int percentageTimeSpent;
+  late DateTime deadline;
+  late int photoId;
 
   @JsonKey(fromJson: _fromJson)
   Task.fromJson(Map<String, dynamic> json)
@@ -22,7 +15,8 @@ class Task {
         name = json['name'],
         percentageDone = json['percentageDone'],
         percentageTimeSpent = json['percentageTimeSpent'],
-        deadline = _fromJson(json['deadline']);
+        deadline = _fromJson(json['deadline']),
+        photoId = json['photoId'];
 }
 final _dateFormatter = DateFormat("yyyy-MM-dd'T'HH:mm:ss");
 

@@ -65,7 +65,7 @@ Future<List<Task>> getTasks() async {
   try {
     isLoading = true;
     var response = await SingletonDio.getDio()
-        .get('$serverAddress/api/home');
+        .get('$serverAddress/api/home/photo');
     List<Task> test = [];
     for (var task in response.data){
       test.add(Task.fromJson(task));
@@ -82,7 +82,7 @@ Future<Task> getDetail(int id) async {
   try {
     isLoading = true;
     var response = await SingletonDio.getDio()
-        .get('$serverAddress/api/detail/$id');
+        .get('$serverAddress/api/detail/photo/$id');
     isLoading = false;
     return Task.fromJson(response.data);
   } catch (e) {
