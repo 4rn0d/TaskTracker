@@ -84,82 +84,83 @@ class DetailsState extends State<Details> {
         child: const Icon(Icons.add_a_photo),
       ),
       body: !api.isLoading
-      ? Padding(
-        padding: const EdgeInsets.all(16.0),
+      ? SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("${AppLocalizations.of(context)!.task_progress}${task!.name}"),
-                // Text("${AppLocalizations.of(context)!.task_deadline}${DateFormat.yMMMMd().format(task!.deadline)}"),
-                Text("${AppLocalizations.of(context)!.task_deadline}${DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).format(task!.deadline)}"),
-                Text("${AppLocalizations.of(context)!.task_timeProgression}${task!.percentageTimeSpent.round()}%"),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Slider(
-                        value: currentSliderValue,
-                        max: 100,
-                        divisions: 100,
-                        label: currentSliderValue.round().toString(),
-                        onChanged: !_isButtonDisabled ?(double value) {
-                          setState(() {
-                            currentSliderValue = value;
-                          });
-                        }: null
-                      )
-                    ),
-                    Text("${currentSliderValue.round()}%"),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                      onPressed: !_isButtonDisabled ?  () async{
-                        try {
-                          setState(() {
-                            _isButtonDisabled = true;
-                          });
-                          var response = await api.update(widget.id, currentSliderValue.toInt());
-                          _isButtonDisabled = false;
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => const Home(),
-                              )
-                          );
-                        }on DioException catch (e) {
-                          setState(() {
-                            _isButtonDisabled = false;
-                          });
-                          if (e.message!.contains('connection errored')) {
-                            var snackBar = SnackBar(
-                              content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
-                              backgroundColor: Colors.red,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            return;
-                          }
-                        }
-                      }: null,
-                      child: Text(AppLocalizations.of(context)!.button_update, style: const TextStyle(color: Colors.white),)
-                    )
-                  ],
-                ),
-                Center(
-                  child: SizedBox(
-                    height: 250,
-                    child: task!.photoId != 0 ? CachedNetworkImage(
-                      imageUrl: "${api.serverAddress}/file/${task!.photoId}",
-                      placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => const Icon(Icons.error),
-                    ): const Text("")
+          padding: const EdgeInsets.all(16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("${AppLocalizations.of(context)!.task_progress}${task!.name}"),
+                  Text("${AppLocalizations.of(context)!.task_deadline}${DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).format(task!.deadline)}"),
+                  Text("${AppLocalizations.of(context)!.task_timeProgression}${task!.percentageTimeSpent.round()}%"),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Slider(
+                          value: currentSliderValue,
+                          max: 100,
+                          divisions: 100,
+                          label: currentSliderValue.round().toString(),
+                          onChanged: !_isButtonDisabled ?(double value) {
+                            setState(() {
+                              currentSliderValue = value;
+                            });
+                          }: null
+                        )
+                      ),
+                      Text("${currentSliderValue.round()}%"),
+                    ],
                   ),
-                )
-              ]
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+                        onPressed: !_isButtonDisabled ?  () async{
+                          try {
+                            setState(() {
+                              _isButtonDisabled = true;
+                            });
+                            var response = await api.update(widget.id, currentSliderValue.toInt());
+                            _isButtonDisabled = false;
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const Home(),
+                                )
+                            );
+                          }on DioException catch (e) {
+                            setState(() {
+                              _isButtonDisabled = false;
+                            });
+                            if (e.message!.contains('connection errored')) {
+                              var snackBar = SnackBar(
+                                content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
+                                backgroundColor: Colors.red,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              return;
+                            }
+                          }
+                        }: null,
+                        child: Text(AppLocalizations.of(context)!.button_update, style: const TextStyle(color: Colors.white),)
+                      )
+                    ],
+                  ),
+                  Center(
+                    child: SizedBox(
+                      height: 250,
+                      child: task!.photoId != 0 ? CachedNetworkImage(
+                        imageUrl: "${api.serverAddress}/file/${task!.photoId}",
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                      ): const Text("")
+                    ),
+                  )
+                ]
+              ),
             ),
           ),
         ),
