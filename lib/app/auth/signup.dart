@@ -6,6 +6,7 @@ import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tp1/app/utils/app_theme.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -114,7 +115,6 @@ class SignupState extends State<Signup> {
                         SizedBox(
                           width: 150,
                           child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                             onPressed: !_isButtonDisabled ? () async {
                               try{
                                 setState(() {
@@ -170,11 +170,12 @@ class SignupState extends State<Signup> {
                                 }
                               }
                             }: null,
-                            child: Text(AppLocalizations.of(context)!.button_signup, style: TextStyle(color: Colors.white),),
+                            child: Text(AppLocalizations.of(context)!.button_signup),
                           ),
                         ),
+                        const Padding(padding: EdgeInsets.all(10)),
                         SizedBox(
-                          child: ElevatedButton(
+                          child: OutlinedButton(
                             onPressed: !_isButtonDisabled ? () {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

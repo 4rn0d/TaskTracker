@@ -118,7 +118,6 @@ class DetailsState extends State<Details> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                         onPressed: !_isButtonDisabled ?  () async{
                           try {
                             setState(() {
@@ -137,7 +136,7 @@ class DetailsState extends State<Details> {
                             });
                             if (e.message!.contains('connection errored')) {
                               var snackBar = SnackBar(
-                                content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
+                                content: Text(AppLocalizations.of(context)!.error_connection,),
                                 backgroundColor: Colors.red,
                               );
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -149,6 +148,7 @@ class DetailsState extends State<Details> {
                       )
                     ],
                   ),
+                  const Padding(padding: EdgeInsets.all(10)),
                   Center(
                     child: SizedBox(
                       height: 250,

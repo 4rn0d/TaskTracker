@@ -5,6 +5,7 @@ import 'package:tp1/app/home.dart';
 import 'package:tp1/app/task/create.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
+import 'package:tp1/app/utils/app_theme.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -21,7 +22,7 @@ class MenuState extends State<Menu> {
       children: [
         DrawerHeader(
           decoration: const BoxDecoration(
-            color: Colors.deepPurple
+            color: AppTheme.accentColor
           ),
           child: Row(
             children: [

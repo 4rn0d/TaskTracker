@@ -5,6 +5,7 @@ import 'package:tp1/app/auth/signup.dart';
 import 'package:tp1/app/home.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
+import 'package:tp1/app/utils/app_theme.dart';
 
 class Signin extends StatefulWidget {
   const Signin({super.key});
@@ -51,7 +52,7 @@ class SigninState extends State<Signin> {
                           controller: _usernameController,
                           enabled: !_isButtonDisabled,
                           decoration: InputDecoration(
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                             labelText: AppLocalizations.of(context)!.hint_username,
                               errorText: _validateUsername ? AppLocalizations.of(context)!.validation_empty : null
                           ),
@@ -70,7 +71,7 @@ class SigninState extends State<Signin> {
                           enabled: !_isButtonDisabled,
                           obscureText: true,
                           decoration: InputDecoration(
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                             labelText: AppLocalizations.of(context)!.hint_password,
                               errorText: _validatePassword ? AppLocalizations.of(context)!.validation_empty : null
                           ),
@@ -86,7 +87,6 @@ class SigninState extends State<Signin> {
                       SizedBox(
                         width: 150,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                           onPressed: !_isButtonDisabled ? () async {
                             try{
                               setState(() {
@@ -122,11 +122,12 @@ class SigninState extends State<Signin> {
                               }
                             }
                           }: null,
-                          child: Text(AppLocalizations.of(context)!.button_login, style: const TextStyle(color: Colors.white),),
+                          child: Text(AppLocalizations.of(context)!.button_login),
                         ),
                       ),
+                      const Padding(padding: EdgeInsets.all(10)),
                       SizedBox(
-                        child: ElevatedButton(
+                        child: OutlinedButton(
                           onPressed: !_isButtonDisabled ? () {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
@@ -134,7 +135,7 @@ class SigninState extends State<Signin> {
                               )
                             );
                           }: null,
-                          child: Text(AppLocalizations.of(context)!.button_signup),
+                          child: Text(AppLocalizations.of(context)!.button_signup,),
                         ),
                       ),
                     ],

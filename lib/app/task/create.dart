@@ -99,7 +99,6 @@ class CreateState extends State<Create> {
                   ),
                 ),
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                     onPressed: !_isButtonDisabled ?  () async {
                       try{
                         setState(() {
@@ -140,7 +139,7 @@ class CreateState extends State<Create> {
                         print(e);
                       }
                     }: null,
-                    child: Text(AppLocalizations.of(context)!.button_create, style: const TextStyle(color: Colors.white),)
+                    child: Text(AppLocalizations.of(context)!.button_create)
                 )
               ]
           ),
