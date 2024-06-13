@@ -50,6 +50,9 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
   json_theme: ^6.4.0
+  firebase_auth: ^4.17.8
+  cloud_firestore: ^4.15.8
+  firebase_storage: ^11.6.9
 
 dev_dependencies:
   flutter_test:

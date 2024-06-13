@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "466220112753",
+    "project_id": "keep-task-18c7c",
+    "storage_bucket": "keep-task-18c7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466220112753:android:82956bb39cbbf15a45b4d0",
+        "android_client_info": {
+          "package_name": "org.turcotte.keeptask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466220112753-6r3pdilk5su63ferla78kecv0kpe08vb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo6JpJo_Z3uWbPevo3eXMDyH52oiZ6r3I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466220112753-6r3pdilk5su63ferla78kecv0kpe08vb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
