@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/task/create.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 
 class Menu extends StatefulWidget {
@@ -50,7 +51,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.home),
-          title: const Text("Accueil"),
+          title: Text(AppLocalizations.of(context)!.title_home),
           onTap: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -63,7 +64,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.add),
-          title: const Text("Creation"),
+          title: Text(AppLocalizations.of(context)!.title_create),
             onTap: () {
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -75,7 +76,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.logout),
-          title: const Text("Déconnexion"),
+          title: Text(AppLocalizations.of(context)!.title_signout),
           onTap: () async {
             try{
               setState(() {

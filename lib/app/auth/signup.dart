@@ -6,6 +6,7 @@ import 'package:tp1/app/DTO/signup_request.dart';
 import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -39,7 +40,7 @@ class SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Sign Up'),
+          title: Text(AppLocalizations.of(context)!.title_signup),
         ),
         body: !api.isLoading
         ? Padding(
@@ -58,8 +59,8 @@ class SignupState extends State<Signup> {
                           enabled: !_isButtonDisabled,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
-                            labelText: 'Username',
-                              errorText: _validateUsername ? "Le champ ne peut pas être vide" : null
+                            labelText: AppLocalizations.of(context)!.hint_username,
+                              errorText: _validateUsername ? AppLocalizations.of(context)!.validation_empty : null
                           ),
                         ),
                       ),
@@ -77,8 +78,8 @@ class SignupState extends State<Signup> {
                           obscureText: true,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
-                            labelText: 'Password',
-                            errorText: _validatePassword ? "Le champ ne peut pas être vide" : null
+                            labelText: AppLocalizations.of(context)!.hint_password,
+                            errorText: _validatePassword ? AppLocalizations.of(context)!.validation_empty : null
                           ),
                         ),
                       ),
@@ -96,9 +97,9 @@ class SignupState extends State<Signup> {
                           enabled: !_isButtonDisabled,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
-                            labelText: 'Confirm Password',
-                              errorText: _validateConfPassword ? "Le champ ne peut pas être vide" :
-                              !_validatePasswordsAreEqual ? "Le mot de passe entrer est différent du mot de passe" :
+                            labelText: AppLocalizations.of(context)!.hint_confirmPassword,
+                              errorText: _validateConfPassword ? AppLocalizations.of(context)!.validation_empty :
+                              !_validatePasswordsAreEqual ? AppLocalizations.of(context)!.validation_differentPasswords :
                                   null,
                           ),
                         ),
@@ -149,8 +150,8 @@ class SignupState extends State<Signup> {
                                 _isButtonDisabled = false;
                               });
                               if (e.message!.contains('connection errored')) {
-                                var snackBar = const SnackBar(
-                                  content: Text("Une erreur réseau est survenue.", style: TextStyle(color: Colors.white),),
+                                var snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
                                   backgroundColor: Colors.red,
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -158,8 +159,8 @@ class SignupState extends State<Signup> {
                               }
                               String message = e.response!.data;
                               if (message == "UsernameAlreadyTaken") {
-                                var snackBar = const SnackBar(
-                                  content: Text("Le nom d'utilisateur n'est pas disponible.", style: TextStyle(color: Colors.white),),
+                                var snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.error_usernameTaken, style: const TextStyle(color: Colors.white),),
                                   backgroundColor: Colors.red,
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -169,7 +170,7 @@ class SignupState extends State<Signup> {
                               }
                             }
                           }: null,
-                          child: const Text('Signup', style: TextStyle(color: Colors.white),),
+                          child: Text(AppLocalizations.of(context)!.button_signup, style: TextStyle(color: Colors.white),),
                         ),
                       ),
                       SizedBox(
@@ -181,7 +182,7 @@ class SignupState extends State<Signup> {
                               )
                             );
                           }: null,
-                          child: const Text('Login'),
+                          child: Text(AppLocalizations.of(context)!.button_login),
                         ),
                       ),
                     ],

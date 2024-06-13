@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:tp1/app/DTO/add_task.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/shared/menu.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 
 class Create extends StatefulWidget {
@@ -35,7 +36,7 @@ class CreateState extends State<Create> {
     return Scaffold(
         drawer: const Menu(),
         appBar: AppBar(
-          title: const Text('Création'),
+          title: Text(AppLocalizations.of(context)!.title_create),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -55,8 +56,8 @@ class CreateState extends State<Create> {
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.title),
                                 border: const OutlineInputBorder(),
-                                labelText: 'Nom de la tâche',
-                                errorText: _validateTaskName ? 'le champ ne peut pas être vide':null
+                                labelText: AppLocalizations.of(context)!.hint_taskName,
+                                errorText: _validateTaskName ? AppLocalizations.of(context)!.validation_empty:null
                               ),
                             ),
                           ),
@@ -78,18 +79,16 @@ class CreateState extends State<Create> {
                                 readOnly: true,
                                 onTap: () async {
                                   DateTime? pickedDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate:DateTime.now(),
-                                      lastDate: DateTime(2101)
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate:DateTime.now(),
+                                    lastDate: DateTime(2101)
                                   );
                                   if(pickedDate != null ){
                                     String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                                     setState(() {
                                       _dateController.text = formattedDate;
                                     });
-                                  }else{
-                                    print("Date is not selected");
                                   }
                                 }
                             ),
@@ -131,23 +130,17 @@ class CreateState extends State<Create> {
                           _isButtonDisabled = false;
                         });
                         if (e.message!.contains('connection errored')) {
-                          var snackBar = const SnackBar(
-                            content: Text("Une erreur réseau est survenue.", style: TextStyle(color: Colors.white),),
+                          var snackBar = SnackBar(
+                            content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
                             backgroundColor: Colors.red,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           return;
                         }
                         print(e);
-                        String message = e.response!.data;
-                        if (message == "BadCredentialsException") {
-                          print('login deja utilise');
-                        } else {
-                          print('autre erreurs');
-                        }
                       }
                     }: null,
-                    child: const Text("Créer", style: TextStyle(color: Colors.white),)
+                    child: Text(AppLocalizations.of(context)!.button_create, style: const TextStyle(color: Colors.white),)
                 )
               ]
           ),

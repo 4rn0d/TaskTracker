@@ -5,6 +5,7 @@ import 'package:tp1/app/models/task.dart';
 import 'package:tp1/app/shared/menu.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 import 'package:tp1/app/task/create.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/task/details.dart';
 
 class Home extends StatefulWidget {
@@ -24,15 +25,18 @@ class HomeState extends State<Home> {
       setState(() {});
     } catch(e){
       var snackBar = SnackBar(
-        content: const Text("Une erreur réseaux est survenue.", style: TextStyle(color: Colors.white),),
+        content: Text(
+          AppLocalizations.of(context)!.error_connection,
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.red,
         duration: const Duration(days: 365),
         action: SnackBarAction(
-        label: 'Réessayer',
-        onPressed: () {
-          _getTasks();
-        },
-      ),
+          label: AppLocalizations.of(context)!.error_tryAgain,
+          onPressed: () {
+            _getTasks();
+          },
+        ),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
@@ -49,7 +53,7 @@ class HomeState extends State<Home> {
     return Scaffold(
         drawer: const Menu(),
         appBar: AppBar(
-          title: const Text('Accueil'),
+          title: Text(AppLocalizations.of(context)!.title_home),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -80,48 +84,56 @@ class HomeState extends State<Home> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10),
-                    child: Row(
+                    child: Column(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Text(tasks[i].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text("Progression de la tâche : ${tasks[i].percentageDone}%"),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text("Date d'échéance : ${DateFormat.yMMMMd().format(tasks[i].deadline)}"),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text("pourcentage de temp écoulé : ${tasks[i].percentageTimeSpent.round()}%"),
-                              ],
-                            ),
+                            Expanded(child: Text(tasks[i].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)),
                           ],
                         ),
-                        Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SizedBox(
-                              width: 100,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                  child: tasks[i].photoId != 0 ? CachedNetworkImage(
-                                    imageUrl: "${api.serverAddress}/file/${tasks[i].photoId}",
-                                    placeholder: (context, url) => const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                                  ): const Text("")
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(Icons.check),
+                                    Text("${AppLocalizations.of(context)!.task_progress}${tasks[i].percentageDone}%"),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.access_time),
+                                    Text("${AppLocalizations.of(context)!.task_deadline}${DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).format(tasks[i].deadline)}"),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.hourglass_bottom),
+                                    Text("${AppLocalizations.of(context)!.task_timeProgression}${tasks[i].percentageTimeSpent.round()}%"),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(
+                                  width: 75,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                      child: tasks[i].photoId != 0 ? CachedNetworkImage(
+                                        imageUrl: "${api.serverAddress}/file/${tasks[i].photoId}",
+                                        placeholder: (context, url) => const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                      ): const Text("")
+                                  ),
+                                )
+                              ],
                             )
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),

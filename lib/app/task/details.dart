@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/models/task.dart';
 import 'package:tp1/app/shared/menu.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 
 class Details extends StatefulWidget {
@@ -31,7 +32,7 @@ class DetailsState extends State<Details> {
       setState(() {});
     }catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Erreur reseau')));
+          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.error_connection)));
     }
   }
   var _imageFile;
@@ -61,8 +62,6 @@ class DetailsState extends State<Details> {
     if (pickedFile != null) {
       _imageFile = File(pickedFile.path);
       setState(() {});
-      print(
-          "debut de l'envoi , pensez a indiquer a l'utilisateur que ca charge ${DateTime.now()}");
       _sendPicture(task!.id, _imageFile).then((res) {
         setState(() {
           task!.photoId = int.parse(res);
@@ -78,11 +77,10 @@ class DetailsState extends State<Details> {
     return Scaffold(
       drawer: const Menu(),
       appBar: AppBar(
-        title: const Text('Details'),
+        title: Text(AppLocalizations.of(context)!.title_details),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _getImage,
-        tooltip: 'Pick Image',
         child: const Icon(Icons.add_a_photo),
       ),
       body: !api.isLoading
@@ -94,9 +92,10 @@ class DetailsState extends State<Details> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Nom : ${task!.name}"),
-                Text("Deadline : ${DateFormat.yMMMMd().format(task!.deadline)}"),
-                Text("Pourcentage de temps écoulé : ${task!.percentageTimeSpent.round()}%"),
+                Text("${AppLocalizations.of(context)!.task_progress}${task!.name}"),
+                // Text("${AppLocalizations.of(context)!.task_deadline}${DateFormat.yMMMMd().format(task!.deadline)}"),
+                Text("${AppLocalizations.of(context)!.task_deadline}${DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).format(task!.deadline)}"),
+                Text("${AppLocalizations.of(context)!.task_timeProgression}${task!.percentageTimeSpent.round()}%"),
                 Row(
                   children: [
                     Expanded(
@@ -137,8 +136,8 @@ class DetailsState extends State<Details> {
                             _isButtonDisabled = false;
                           });
                           if (e.message!.contains('connection errored')) {
-                            var snackBar = const SnackBar(
-                              content: Text("Une erreur réseau est survenue.", style: TextStyle(color: Colors.white),),
+                            var snackBar = SnackBar(
+                              content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
                               backgroundColor: Colors.red,
                             );
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -146,7 +145,7 @@ class DetailsState extends State<Details> {
                           }
                         }
                       }: null,
-                      child: const Text("Mise à jour du progrès", style: TextStyle(color: Colors.white),)
+                      child: Text(AppLocalizations.of(context)!.button_update, style: const TextStyle(color: Colors.white),)
                     )
                   ],
                 ),

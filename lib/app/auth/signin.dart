@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tp1/app/DTO/signin_request.dart';
 import 'package:tp1/app/auth/signup.dart';
 import 'package:tp1/app/home.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 
 class Signin extends StatefulWidget {
@@ -33,7 +34,7 @@ class SigninState extends State<Signin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text(AppLocalizations.of(context)!.title_login),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -50,8 +51,8 @@ class SigninState extends State<Signin> {
                         enabled: !_isButtonDisabled,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Username',
-                            errorText: _validateUsername ? "Le champ ne peut pas être vide" : null
+                          labelText: AppLocalizations.of(context)!.hint_username,
+                            errorText: _validateUsername ? AppLocalizations.of(context)!.validation_empty : null
                         ),
                       ),
                     ),
@@ -69,8 +70,8 @@ class SigninState extends State<Signin> {
                         obscureText: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Password',
-                            errorText: _validatePassword ? "Le champ ne peut pas être vide" : null
+                          labelText: AppLocalizations.of(context)!.hint_password,
+                            errorText: _validatePassword ? AppLocalizations.of(context)!.validation_empty : null
                         ),
                       ),
                     ),
@@ -111,8 +112,8 @@ class SigninState extends State<Signin> {
                               _isButtonDisabled = false;
                             });
                             if (e.message!.contains('connection errored')) {
-                              var snackBar = const SnackBar(
-                                content: Text("Une erreur réseau est survenue.", style: TextStyle(color: Colors.white),),
+                              var snackBar = SnackBar(
+                                content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
                                 backgroundColor: Colors.red,
                               );
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -120,7 +121,7 @@ class SigninState extends State<Signin> {
                             }
                           }
                         }: null,
-                        child: const Text('Login', style: TextStyle(color: Colors.white),),
+                        child: Text(AppLocalizations.of(context)!.button_login, style: const TextStyle(color: Colors.white),),
                       ),
                     ),
                     SizedBox(
@@ -132,7 +133,7 @@ class SigninState extends State<Signin> {
                             )
                           );
                         }: null,
-                        child: const Text('Signup'),
+                        child: Text(AppLocalizations.of(context)!.button_signup),
                       ),
                     ),
                   ],
