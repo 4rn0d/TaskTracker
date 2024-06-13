@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "org.turcotte.keeptask"
+    namespace "org.turcotte.tp1"
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 

@@ -14,7 +14,6 @@ class Signup extends StatefulWidget {
 }
 
 class SignupState extends State<Signup> {
-  SignupRequest signupRequest = SignupRequest();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -127,18 +126,16 @@ class SignupState extends State<Signup> {
                                    _validatePasswordsAreEqual = false;
                                   }
                                 });
-                                signupRequest.username = _usernameController.text;
-                                signupRequest.password = _passwordController.text;
                                 if (!_validatePassword && !_validateUsername && !_validateConfPassword){
                                   if (_passwordController.text == _confirmPasswordController.text) {
-                                    var response = await api.signup(signupRequest);
+                                    var response = await api.signup(_usernameController.text, _passwordController.text);
                                     _isButtonDisabled = false;
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
                                           builder: (context) => const Home(),
                                         )
                                     );
-                                                                    }
+                                  }
                                 }
                                 _isButtonDisabled = false;
                               }on DioException catch (e) {

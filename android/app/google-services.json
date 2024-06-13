@@ -29,6 +29,13 @@
             {
               "client_id": "466220112753-6r3pdilk5su63ferla78kecv0kpe08vb.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "466220112753-3bhio9radv0v9ons3hc2g69nebjokn64.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.turcotte.tp1"
+              }
             }
           ]
         }

@@ -22,7 +22,7 @@ class HomeState extends State<Home> {
 
   void _getTasks() async{
     try {
-      tasks = await api.getTasks();
+      api.getTasks();
       setState(() {});
     } catch(e){
       var snackBar = SnackBar(

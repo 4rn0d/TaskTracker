@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tp1/app/DTO/add_task.dart';
 import 'package:tp1/app/DTO/signin_request.dart';
 import 'package:tp1/app/DTO/signin_response.dart';
@@ -12,42 +14,43 @@ String serverAddress = "http://10.0.2.2:8080";
 String renderAddress = "https://kickmya-sserver.onrender.com";
 bool isLoading = false;
 
-Future<SigninResponse> signup(SignupRequest req) async {
+Future<UserCredential?> signup(String email, String password) async {
   try {
-    var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signup', data: req.toJson());
-    print(response);
-    var text = response.toString();
-    user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
-    return SigninResponse.fromJson(response.data);
+    final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return credential;
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      print('The password provided is too weak.');
+    } else if (e.code == 'email-already-in-use') {
+      print('The account already exists for that email.');
+    }
   } catch (e) {
     print(e);
-    rethrow;
   }
+  return null;
 }
 
-Future<SigninResponse> signin(SigninRequest req) async {
+Future<UserCredential?> signin(String email, String password) async {
   try {
-    var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signin', data: req.toJson());
-    var text = response.toString();
-    user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
-    print(response);
-    return SigninResponse.fromJson(response.data);
-  } catch (e) {
-    print(e);
-    rethrow;
+    final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password
+    );
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      print('No user found for that email.');
+    } else if (e.code == 'wrong-password') {
+      print('Wrong password provided for that user.');
+    }
   }
+  return null;
 }
 
 Future<void> signout() async {
-  try {
-    var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signout');
-  } catch (e) {
-    print(e);
-    rethrow;
-  }
+  await FirebaseAuth.instance.signOut();
 }
 
 Future<void> update(int id, int value) async {
@@ -60,20 +63,27 @@ Future<void> update(int id, int value) async {
   }
 }
 
-Future<List<Task>> getTasks() async {
-  try {
-    isLoading = true;
-    var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/home/photo');
-    List<Task> test = [];
-    for (var task in response.data){
-      test.add(Task.fromJson(task));
-    }
-    isLoading = false;
-    return test;
-  } catch (e) {
-    print(e);
-    rethrow;
+void getTasks() async {
+  // try {
+  //   isLoading = true;
+  //   var response = await SingletonDio.getDio()
+  //       .get('$renderAddress/api/home/photo');
+  //   for (var task in response.data){
+  //     test.add(Task.fromJson(task));
+  //   }
+  //   isLoading = false;
+  //   return test;
+  // } catch (e) {
+  //   print(e);
+  //   rethrow;
+  // }
+  List<Task> taskList = [];
+  CollectionReference tasksCollection = FirebaseFirestore.instance.collection("Tasks");
+  var results = await tasksCollection.get();
+  var taskDocs = results.docs;
+  for(int i = 0; i >= taskDocs.length; i++){
+    var task = taskDocs[i].data();
+    print(task);
   }
 }
 

@@ -14,14 +14,13 @@ class Signin extends StatefulWidget {
 }
 
 class SigninState extends State<Signin> {
-  SigninRequest signinRequest = SigninRequest();
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -48,7 +47,7 @@ class SigninState extends State<Signin> {
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: _usernameController,
+                          controller: _emailController,
                           enabled: !_isButtonDisabled,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
@@ -90,13 +89,11 @@ class SigninState extends State<Signin> {
                             try{
                               setState(() {
                                 _isButtonDisabled = true;
-                                _validateUsername = _usernameController.text.isEmpty;
+                                _validateUsername = _emailController.text.isEmpty;
                                 _validatePassword = _passwordController.text.isEmpty;
                               });
-                              signinRequest.username = _usernameController.text;
-                              signinRequest.password = _passwordController.text;
                               if (!_validatePassword && !_validateUsername) {
-                                var response = await api.signin(signinRequest);
+                                var response = await api.signin(_emailController.text, _passwordController.text);
                                 _isButtonDisabled = false;
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -139,6 +136,12 @@ class SigninState extends State<Signin> {
                   )
                 ],
               ),
+              ElevatedButton(
+                  onPressed: (){
+                api.getTasks();
+              },
+                  child: Text("testetstset")
+              )
             ],
           ),
         ),
