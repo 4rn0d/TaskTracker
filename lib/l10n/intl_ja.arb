@@ -1,5 +1,6 @@
 {
   "@@locale": "ja",
+  "code":"ja",
   "title_login": "ログイン",
   "hint_username": "ユーザー名",
   "validation_empty": "フィールドは空にできません",
@@ -21,5 +22,6 @@
   "button_create": "作成",
   "title_details": "詳細",
   "button_update": "タスクを更新",
-  "title_signout": "ログアウト"
+  "title_signout": "ログアウト",
+  "task_name": "タスク名："
 }

@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:tp1/app/DTO/add_task.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/shared/menu.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
+import 'package:tp1/generated/l10n.dart';
 
 class Create extends StatefulWidget {
   const Create({super.key});
@@ -36,7 +36,7 @@ class CreateState extends State<Create> {
     return Scaffold(
         drawer: const Menu(),
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.title_create),
+          title: Text(S.of(context).title_create),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -56,8 +56,8 @@ class CreateState extends State<Create> {
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.title),
                                 border: const OutlineInputBorder(),
-                                labelText: AppLocalizations.of(context)!.hint_taskName,
-                                errorText: _validateTaskName ? AppLocalizations.of(context)!.validation_empty:null
+                                labelText: S.of(context).hint_taskName,
+                                errorText: _validateTaskName ? S.of(context).validation_empty:null
                               ),
                             ),
                           ),
@@ -130,7 +130,7 @@ class CreateState extends State<Create> {
                         });
                         if (e.message!.contains('connection errored')) {
                           var snackBar = SnackBar(
-                            content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
+                            content: Text(S.of(context).error_connection, style: const TextStyle(color: Colors.white),),
                             backgroundColor: Colors.red,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -139,7 +139,7 @@ class CreateState extends State<Create> {
                         print(e);
                       }
                     }: null,
-                    child: Text(AppLocalizations.of(context)!.button_create)
+                    child: Text(S.of(context).button_create)
                 )
               ]
           ),

@@ -1,5 +1,6 @@
 {
   "@@locale": "ko",
+  "code":"ko",
   "title_login": "로그인",
   "hint_username": "사용자 이름",
   "validation_empty": "필드를 비워둘 수 없습니다",
@@ -21,5 +22,6 @@
   "button_create": "만들기",
   "title_details": "상세 정보",
   "button_update": "작업 업데이트",
-  "title_signout": "로그아웃"
+  "title_signout": "로그아웃",
+  "task_name": "작업 이름 : "
 }

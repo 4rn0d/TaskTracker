@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "button_login": MessageLookupByLibrary.simpleMessage("Login"),
         "button_signup": MessageLookupByLibrary.simpleMessage("Signup"),
         "button_update": MessageLookupByLibrary.simpleMessage("Update task"),
+        "code": MessageLookupByLibrary.simpleMessage("en"),
         "error_connection": MessageLookupByLibrary.simpleMessage(
             "A connection error as occured"),
         "error_tryAgain": MessageLookupByLibrary.simpleMessage("Try again"),
@@ -37,6 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_taskName": MessageLookupByLibrary.simpleMessage("Task name"),
         "hint_username": MessageLookupByLibrary.simpleMessage("Username"),
         "task_deadline": MessageLookupByLibrary.simpleMessage("Deadline : "),
+        "task_name": MessageLookupByLibrary.simpleMessage("Task\'s name :"),
         "task_progress":
             MessageLookupByLibrary.simpleMessage("Task progression : "),
         "task_timeProgression":

@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "button_login": MessageLookupByLibrary.simpleMessage("로그인"),
         "button_signup": MessageLookupByLibrary.simpleMessage("회원가입"),
         "button_update": MessageLookupByLibrary.simpleMessage("작업 업데이트"),
+        "code": MessageLookupByLibrary.simpleMessage("ko"),
         "error_connection":
             MessageLookupByLibrary.simpleMessage("연결 오류가 발생했습니다"),
         "error_tryAgain": MessageLookupByLibrary.simpleMessage("다시 시도하십시오"),
@@ -36,6 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_taskName": MessageLookupByLibrary.simpleMessage("작업 이름"),
         "hint_username": MessageLookupByLibrary.simpleMessage("사용자 이름"),
         "task_deadline": MessageLookupByLibrary.simpleMessage("마감 기한: "),
+        "task_name": MessageLookupByLibrary.simpleMessage("작업 이름 : "),
         "task_progress": MessageLookupByLibrary.simpleMessage("작업 진행 상황: "),
         "task_timeProgression":
             MessageLookupByLibrary.simpleMessage("시간 진행 상황: "),

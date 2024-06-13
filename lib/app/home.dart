@@ -5,8 +5,9 @@ import 'package:tp1/app/models/task.dart';
 import 'package:tp1/app/shared/menu.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 import 'package:tp1/app/task/create.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/task/details.dart';
+
+import '../generated/l10n.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -26,13 +27,13 @@ class HomeState extends State<Home> {
     } catch(e){
       var snackBar = SnackBar(
         content: Text(
-          AppLocalizations.of(context)!.error_connection,
+          S.of(context).error_connection,
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.red,
         duration: const Duration(days: 365),
         action: SnackBarAction(
-          label: AppLocalizations.of(context)!.error_tryAgain,
+          label: S.of(context).error_tryAgain,
           onPressed: () {
             _getTasks();
           },
@@ -53,7 +54,7 @@ class HomeState extends State<Home> {
     return Scaffold(
         drawer: const Menu(),
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.title_home),
+          title: Text(S.of(context)!.title_home),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -100,19 +101,19 @@ class HomeState extends State<Home> {
                                 Row(
                                   children: [
                                     const Icon(Icons.check),
-                                    Text("${AppLocalizations.of(context)!.task_progress}${tasks[i].percentageDone}%"),
+                                    Text("${S.of(context).task_progress}${tasks[i].percentageDone}%"),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     const Icon(Icons.access_time),
-                                    Text("${AppLocalizations.of(context)!.task_deadline}${DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).format(tasks[i].deadline)}"),
+                                    Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(tasks[i].deadline)}"),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     const Icon(Icons.hourglass_bottom),
-                                    Text("${AppLocalizations.of(context)!.task_timeProgression}${tasks[i].percentageTimeSpent.round()}%"),
+                                    Text("${S.of(context).task_timeProgression}${tasks[i].percentageTimeSpent.round()}%"),
                                   ],
                                 ),
                               ],

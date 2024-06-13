@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -16,7 +15,7 @@ bool isLoading = false;
 Future<SigninResponse> signup(SignupRequest req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('$serverAddress/api/id/signup', data: req.toJson());
+        .post('$renderAddress/api/id/signup', data: req.toJson());
     print(response);
     var text = response.toString();
     user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
@@ -30,7 +29,7 @@ Future<SigninResponse> signup(SignupRequest req) async {
 Future<SigninResponse> signin(SigninRequest req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('$serverAddress/api/id/signin', data: req.toJson());
+        .post('$renderAddress/api/id/signin', data: req.toJson());
     var text = response.toString();
     user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
     print(response);
@@ -44,7 +43,7 @@ Future<SigninResponse> signin(SigninRequest req) async {
 Future<void> signout() async {
   try {
     var response = await SingletonDio.getDio()
-        .post('$serverAddress/api/id/signout');
+        .post('$renderAddress/api/id/signout');
   } catch (e) {
     print(e);
     rethrow;
@@ -54,7 +53,7 @@ Future<void> signout() async {
 Future<void> update(int id, int value) async {
   try {
     var response = await SingletonDio.getDio()
-        .get('$serverAddress/api/progress/$id/$value');
+        .get('$renderAddress/api/progress/$id/$value');
   } catch (e) {
     print(e);
     rethrow;
@@ -65,7 +64,7 @@ Future<List<Task>> getTasks() async {
   try {
     isLoading = true;
     var response = await SingletonDio.getDio()
-        .get('$serverAddress/api/home/photo');
+        .get('$renderAddress/api/home/photo');
     List<Task> test = [];
     for (var task in response.data){
       test.add(Task.fromJson(task));
@@ -82,7 +81,7 @@ Future<Task> getDetail(int id) async {
   try {
     isLoading = true;
     var response = await SingletonDio.getDio()
-        .get('$serverAddress/api/detail/photo/$id');
+        .get('$renderAddress/api/detail/photo/$id');
     isLoading = false;
     return Task.fromJson(response.data);
   } catch (e) {
@@ -94,7 +93,7 @@ Future<Task> getDetail(int id) async {
 Future<void> addTask(AddTask req) async {
   try {
     var response = await SingletonDio.getDio()
-        .post('$serverAddress/api/add', data: req.toJson());
+        .post('$renderAddress/api/add', data: req.toJson());
   } catch (e) {
     print(e);
     rethrow;

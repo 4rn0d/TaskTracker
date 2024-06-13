@@ -26,7 +26,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "button_login": MessageLookupByLibrary.simpleMessage("Connexion"),
         "button_signup": MessageLookupByLibrary.simpleMessage("Inscription"),
         "button_update":
-            MessageLookupByLibrary.simpleMessage("Mettre à jour de la tâche"),
+            MessageLookupByLibrary.simpleMessage("Mise à jour de la tâche"),
+        "code": MessageLookupByLibrary.simpleMessage("fr"),
         "error_connection": MessageLookupByLibrary.simpleMessage(
             "Une erreur de connexion s\'est produite"),
         "error_tryAgain": MessageLookupByLibrary.simpleMessage("Réessayer"),
@@ -40,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_username":
             MessageLookupByLibrary.simpleMessage("Nom d\'utilisateur"),
         "task_deadline": MessageLookupByLibrary.simpleMessage("Échéance : "),
+        "task_name": MessageLookupByLibrary.simpleMessage("Nom de la tâche"),
         "task_progress":
             MessageLookupByLibrary.simpleMessage("Progression de la tâche : "),
         "task_timeProgression":

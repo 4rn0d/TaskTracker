@@ -8,8 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/models/task.dart';
 import 'package:tp1/app/shared/menu.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
+import 'package:tp1/generated/l10n.dart';
 
 class Details extends StatefulWidget {
 
@@ -32,7 +32,7 @@ class DetailsState extends State<Details> {
       setState(() {});
     }catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.error_connection)));
+          .showSnackBar(SnackBar(content: Text(S.of(context).error_connection)));
     }
   }
   var _imageFile;
@@ -77,7 +77,7 @@ class DetailsState extends State<Details> {
     return Scaffold(
       drawer: const Menu(),
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.title_details),
+        title: Text(S.of(context).title_details),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _getImage,
@@ -93,9 +93,9 @@ class DetailsState extends State<Details> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${AppLocalizations.of(context)!.task_progress}${task!.name}"),
-                  Text("${AppLocalizations.of(context)!.task_deadline}${DateFormat.yMMMMd(AppLocalizations.of(context)!.localeName).format(task!.deadline)}"),
-                  Text("${AppLocalizations.of(context)!.task_timeProgression}${task!.percentageTimeSpent.round()}%"),
+                  Text(S.of(context).task_name+ "${task!.name}"),
+                  Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(task!.deadline)}"),
+                  Text("${S.of(context).task_timeProgression}${task!.percentageTimeSpent.round()}%"),
                   Row(
                     children: [
                       Expanded(
@@ -136,7 +136,7 @@ class DetailsState extends State<Details> {
                             });
                             if (e.message!.contains('connection errored')) {
                               var snackBar = SnackBar(
-                                content: Text(AppLocalizations.of(context)!.error_connection,),
+                                content: Text(S.of(context).error_connection,),
                                 backgroundColor: Colors.red,
                               );
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -144,7 +144,7 @@ class DetailsState extends State<Details> {
                             }
                           }
                         }: null,
-                        child: Text(AppLocalizations.of(context)!.button_update, style: const TextStyle(color: Colors.white),)
+                        child: Text(S.of(context).button_update, style: const TextStyle(color: Colors.white),)
                       )
                     ],
                   ),

@@ -1,12 +1,10 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tp1/app/DTO/signup_request.dart';
 import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:tp1/app/utils/app_theme.dart';
+import 'package:tp1/generated/l10n.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -40,7 +38,7 @@ class SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.title_signup),
+          title: Text(S.of(context).title_signup),
         ),
         body: !api.isLoading
         ? SingleChildScrollView(
@@ -60,8 +58,8 @@ class SignupState extends State<Signup> {
                             enabled: !_isButtonDisabled,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
-                              labelText: AppLocalizations.of(context)!.hint_username,
-                                errorText: _validateUsername ? AppLocalizations.of(context)!.validation_empty : null
+                              labelText: S.of(context).hint_username,
+                                errorText: _validateUsername ? S.of(context).validation_empty : null
                             ),
                           ),
                         ),
@@ -79,8 +77,8 @@ class SignupState extends State<Signup> {
                             obscureText: true,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
-                              labelText: AppLocalizations.of(context)!.hint_password,
-                              errorText: _validatePassword ? AppLocalizations.of(context)!.validation_empty : null
+                              labelText: S.of(context).hint_password,
+                              errorText: _validatePassword ? S.of(context).validation_empty : null
                             ),
                           ),
                         ),
@@ -98,9 +96,9 @@ class SignupState extends State<Signup> {
                             enabled: !_isButtonDisabled,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
-                              labelText: AppLocalizations.of(context)!.hint_confirmPassword,
-                                errorText: _validateConfPassword ? AppLocalizations.of(context)!.validation_empty :
-                                !_validatePasswordsAreEqual ? AppLocalizations.of(context)!.validation_differentPasswords :
+                              labelText: S.of(context).hint_confirmPassword,
+                                errorText: _validateConfPassword ? S.of(context).validation_empty :
+                                !_validatePasswordsAreEqual ? S.of(context).validation_differentPasswords :
                                     null,
                             ),
                           ),
@@ -134,15 +132,13 @@ class SignupState extends State<Signup> {
                                 if (!_validatePassword && !_validateUsername && !_validateConfPassword){
                                   if (_passwordController.text == _confirmPasswordController.text) {
                                     var response = await api.signup(signupRequest);
-                                    if (response.username != null){
-                                      _isButtonDisabled = false;
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                            builder: (context) => const Home(),
-                                          )
-                                      );
-                                    }
-                                  }
+                                    _isButtonDisabled = false;
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => const Home(),
+                                        )
+                                    );
+                                                                    }
                                 }
                                 _isButtonDisabled = false;
                               }on DioException catch (e) {
@@ -151,7 +147,7 @@ class SignupState extends State<Signup> {
                                 });
                                 if (e.message!.contains('connection errored')) {
                                   var snackBar = SnackBar(
-                                    content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
+                                    content: Text(S.of(context).error_connection, style: const TextStyle(color: Colors.white),),
                                     backgroundColor: Colors.red,
                                   );
                                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -160,7 +156,7 @@ class SignupState extends State<Signup> {
                                 String message = e.response!.data;
                                 if (message == "UsernameAlreadyTaken") {
                                   var snackBar = SnackBar(
-                                    content: Text(AppLocalizations.of(context)!.error_usernameTaken, style: const TextStyle(color: Colors.white),),
+                                    content: Text(S.of(context).error_usernameTaken, style: const TextStyle(color: Colors.white),),
                                     backgroundColor: Colors.red,
                                   );
                                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -170,7 +166,7 @@ class SignupState extends State<Signup> {
                                 }
                               }
                             }: null,
-                            child: Text(AppLocalizations.of(context)!.button_signup),
+                            child: Text(S.of(context).button_signup),
                           ),
                         ),
                         const Padding(padding: EdgeInsets.all(10)),
@@ -183,7 +179,7 @@ class SignupState extends State<Signup> {
                                 )
                               );
                             }: null,
-                            child: Text(AppLocalizations.of(context)!.button_login),
+                            child: Text(S.of(context).button_login),
                           ),
                         ),
                       ],

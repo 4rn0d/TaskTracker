@@ -50,6 +50,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `en`
+  String get code {
+    return Intl.message(
+      'en',
+      name: 'code',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Login`
   String get title_login {
     return Intl.message(
@@ -269,6 +279,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Task's name :`
+  String get task_name {
+    return Intl.message(
+      'Task\'s name :',
+      name: 'task_name',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -281,7 +301,6 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
       Locale.fromSubtags(languageCode: 'fr'),
       Locale.fromSubtags(languageCode: 'ja'),
       Locale.fromSubtags(languageCode: 'ko'),
-      Locale.fromSubtags(languageCode: 'kr'),
     ];
   }
 

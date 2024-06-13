@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/task/create.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 import 'package:tp1/app/utils/app_theme.dart';
+import 'package:tp1/generated/l10n.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -43,7 +43,7 @@ class MenuState extends State<Menu> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(api.user, style: TextStyle(color: Colors.white),),
+                  Text(api.user, style: const TextStyle(color: Colors.white),),
                 ],
               ),
             ],
@@ -52,7 +52,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.home),
-          title: Text(AppLocalizations.of(context)!.title_home),
+          title: Text(S.of(context).title_home),
           onTap: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -65,7 +65,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.add),
-          title: Text(AppLocalizations.of(context)!.title_create),
+          title: Text(S.of(context).title_create),
             onTap: () {
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -77,7 +77,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.logout),
-          title: Text(AppLocalizations.of(context)!.title_signout),
+          title: Text(S.of(context).title_signout),
           onTap: () async {
             try{
               setState(() {

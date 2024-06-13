@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tp1/app/DTO/signin_request.dart';
 import 'package:tp1/app/auth/signup.dart';
 import 'package:tp1/app/home.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
-import 'package:tp1/app/utils/app_theme.dart';
+import 'package:tp1/generated/l10n.dart';
 
 class Signin extends StatefulWidget {
   const Signin({super.key});
@@ -35,7 +34,7 @@ class SigninState extends State<Signin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.title_login),
+        title: Text(S.of(context).title_login),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -53,8 +52,8 @@ class SigninState extends State<Signin> {
                           enabled: !_isButtonDisabled,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
-                            labelText: AppLocalizations.of(context)!.hint_username,
-                              errorText: _validateUsername ? AppLocalizations.of(context)!.validation_empty : null
+                            labelText: S.of(context).hint_username,
+                              errorText: _validateUsername ? S.of(context).validation_empty : null
                           ),
                         ),
                       ),
@@ -72,8 +71,8 @@ class SigninState extends State<Signin> {
                           obscureText: true,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
-                            labelText: AppLocalizations.of(context)!.hint_password,
-                              errorText: _validatePassword ? AppLocalizations.of(context)!.validation_empty : null
+                            labelText: S.of(context).hint_password,
+                              errorText: _validatePassword ? S.of(context).validation_empty : null
                           ),
                         ),
                       ),
@@ -98,15 +97,13 @@ class SigninState extends State<Signin> {
                               signinRequest.password = _passwordController.text;
                               if (!_validatePassword && !_validateUsername) {
                                 var response = await api.signin(signinRequest);
-                                if (response.username != null){
-                                  _isButtonDisabled = false;
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => const Home(),
-                                    )
-                                  );
-                                }
-                              }
+                                _isButtonDisabled = false;
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const Home(),
+                                  )
+                                );
+                                                            }
                               _isButtonDisabled = false;
                             }on DioException catch (e) {
                               setState(() {
@@ -114,7 +111,7 @@ class SigninState extends State<Signin> {
                               });
                               if (e.message!.contains('connection errored')) {
                                 var snackBar = SnackBar(
-                                  content: Text(AppLocalizations.of(context)!.error_connection, style: const TextStyle(color: Colors.white),),
+                                  content: Text(S.of(context).error_connection, style: const TextStyle(color: Colors.white),),
                                   backgroundColor: Colors.red,
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -122,7 +119,7 @@ class SigninState extends State<Signin> {
                               }
                             }
                           }: null,
-                          child: Text(AppLocalizations.of(context)!.button_login),
+                          child: Text(S.of(context).button_login),
                         ),
                       ),
                       const Padding(padding: EdgeInsets.all(10)),
@@ -135,7 +132,7 @@ class SigninState extends State<Signin> {
                               )
                             );
                           }: null,
-                          child: Text(AppLocalizations.of(context)!.button_signup,),
+                          child: Text(S.of(context).button_signup,),
                         ),
                       ),
                     ],
