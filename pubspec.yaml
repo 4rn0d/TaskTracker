@@ -48,6 +48,7 @@ dependencies:
   cached_network_image: ^3.3.1
   flutter_localizations:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,11 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_launcher_icons:
+  android: "false"
+  ios: false
+  image_path: "lib/app/assets/icons/icon.jpg"
 
 # The following section is specific to Flutter packages.
 flutter:
