@@ -57,14 +57,13 @@ Future<void> signout() async {
   await FirebaseAuth.instance.signOut();
 }
 
-Future<void> update(int id, int value) async {
-  try {
-    var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/progress/$id/$value');
-  } catch (e) {
-    print(e);
-    rethrow;
-  }
+Future<void> update(String id, int value) async {
+  CollectionReference taskReference = FirebaseFirestore.instance.collection('Tasks');
+  DocumentReference taskDoc = taskReference.doc(id);
+  taskDoc.set({
+    'Progression': value.toString()
+  });
+  print(taskDoc);
 }
 
 Future<List<QueryDocumentSnapshot<Task>>> getTasks() async {
@@ -77,11 +76,12 @@ Future<List<QueryDocumentSnapshot<Task>>> getTasks() async {
 }
 
 Future<DocumentSnapshot<Task>> getDetail(String id) async {
+  isLoading = true;
   final ref = FirebaseFirestore.instance.collection("Tasks").doc(id).withConverter(
       fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
   );
   final docSnap = await ref.get();
-  // final task = docSnap.data();
+  isLoading = false;
   return docSnap;
 }
 
