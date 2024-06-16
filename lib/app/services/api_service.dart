@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:tp1/app/DTO/add_task.dart';
 import 'package:tp1/app/DTO/signin_request.dart';
 import 'package:tp1/app/DTO/signin_response.dart';
@@ -85,13 +86,14 @@ Future<DocumentSnapshot<Task>> getDetail(String id) async {
 }
 
 Future<void> addTask(AddTask req) async {
-  try {
-    var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/add', data: req.toJson());
-  } catch (e) {
-    print(e);
-    rethrow;
-  }
+  CollectionReference taskReference = FirebaseFirestore.instance.collection('Tasks');
+  taskReference.add({
+    'Name': req.name,
+    'Deadline': DateTime.parse(req.deadline),
+    'Progression': 0,
+    'TimeSpent': 0,
+    'PhotoId': 0,
+  });
 }
 
 class SingletonDio {
