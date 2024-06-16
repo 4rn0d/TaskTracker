@@ -21,7 +21,7 @@
   "hint_taskName": "Nom de la tâche",
   "button_create": "Créer",
   "title_details": "Détails",
-  "button_update": "Mise à jour de la tâche",
+  "button_update": "Mise à jour de la tâche : ",
   "title_signout": "Déconnexion",
   "task_name": "Nom de la tâche"
 }

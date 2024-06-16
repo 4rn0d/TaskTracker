@@ -18,11 +18,11 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
 
-  List<Task> tasks = [];
+  var tasks = [];
 
   void _getTasks() async{
     try {
-      api.getTasks();
+      tasks = await api.getTasks();
       setState(() {});
     } catch(e){
       var snackBar = SnackBar(
@@ -89,7 +89,7 @@ class HomeState extends State<Home> {
                       children: [
                         Row(
                           children: [
-                            Expanded(child: Text(tasks[i].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)),
+                            Expanded(child: Text(tasks[i]['Name'], style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)),
                           ],
                         ),
                         Row(
@@ -101,19 +101,19 @@ class HomeState extends State<Home> {
                                 Row(
                                   children: [
                                     const Icon(Icons.check),
-                                    Text("${S.of(context).task_progress}${tasks[i].percentageDone}%"),
+                                    Text("${S.of(context).task_progress}${tasks[i]['Progression']}%"),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     const Icon(Icons.access_time),
-                                    Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(tasks[i].deadline)}"),
+                                    Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(tasks[i]['Deadline'].toDate())}"),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     const Icon(Icons.hourglass_bottom),
-                                    Text("${S.of(context).task_timeProgression}${tasks[i].percentageTimeSpent.round()}%"),
+                                    Text("${S.of(context).task_timeProgression}${tasks[i]['TimeSpent']}%"),
                                   ],
                                 ),
                               ],
@@ -124,8 +124,8 @@ class HomeState extends State<Home> {
                                   width: 75,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                      child: tasks[i].photoId != 0 ? CachedNetworkImage(
-                                        imageUrl: "${api.serverAddress}/file/${tasks[i].photoId}",
+                                      child: tasks[i]['PhotoId'] != 0 ? CachedNetworkImage(
+                                        imageUrl: "${api.serverAddress}/file/${tasks[i]['PhotoId']}",
                                         placeholder: (context, url) => const CircularProgressIndicator(),
                                         errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ): const Text("")

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tp1/app/DTO/signup_request.dart';
 import 'package:tp1/app/auth/signin.dart';
@@ -129,12 +130,22 @@ class SignupState extends State<Signup> {
                                 if (!_validatePassword && !_validateUsername && !_validateConfPassword){
                                   if (_passwordController.text == _confirmPasswordController.text) {
                                     var response = await api.signup(_usernameController.text, _passwordController.text);
-                                    _isButtonDisabled = false;
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                          builder: (context) => const Home(),
-                                        )
-                                    );
+                                    FirebaseAuth.instance
+                                        .authStateChanges()
+                                        .listen((User? user) {
+                                      if (user == null) {
+                                        setState(() {
+                                          _isButtonDisabled = false;
+                                        });
+                                      } else {
+                                        _isButtonDisabled = false;
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                              builder: (context) => const Home(),
+                                            )
+                                        );
+                                      }
+                                    });
                                   }
                                 }
                                 _isButtonDisabled = false;

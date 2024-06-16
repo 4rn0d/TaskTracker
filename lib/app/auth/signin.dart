@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tp1/app/DTO/signin_request.dart';
 import 'package:tp1/app/auth/signup.dart';
@@ -94,12 +95,21 @@ class SigninState extends State<Signin> {
                               });
                               if (!_validatePassword && !_validateUsername) {
                                 var response = await api.signin(_emailController.text, _passwordController.text);
-                                _isButtonDisabled = false;
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => const Home(),
-                                  )
-                                );
+                                FirebaseAuth.instance
+                                    .authStateChanges()
+                                    .listen((User? user) {
+                                  if (user == null) {
+                                    setState(() {
+                                      _isButtonDisabled = false;
+                                    });
+                                  } else {
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => const Home(),
+                                        )
+                                    );
+                                  }
+                                });
                                                             }
                               _isButtonDisabled = false;
                             }on DioException catch (e) {

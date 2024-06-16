@@ -13,7 +13,7 @@ import 'package:tp1/generated/l10n.dart';
 
 class Details extends StatefulWidget {
 
-  final int id;
+  final String id;
 
   const Details({super.key, required this.id});
 
@@ -22,13 +22,13 @@ class Details extends StatefulWidget {
 }
 
 class DetailsState extends State<Details> {
-  Task? task;
+  var task;
   double currentSliderValue = 0;
 
   void _getDetails() async{
     try {
       task = await api.getDetail(widget.id);
-      currentSliderValue = task!.percentageDone.toDouble();
+      currentSliderValue = task['Progression'];
       setState(() {});
     }catch (e) {
       ScaffoldMessenger.of(context)
@@ -87,81 +87,76 @@ class DetailsState extends State<Details> {
       ? SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(S.of(context).task_name+ "${task['Name']}"),
+              Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(task['Deadline'].toDate())}"),
+              Text("${S.of(context).task_timeProgression}${task['TimeSpent']}%"),
+              Row(
                 children: [
-                  Text(S.of(context).task_name+ "${task!.name}"),
-                  Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(task!.deadline)}"),
-                  Text("${S.of(context).task_timeProgression}${task!.percentageTimeSpent.round()}%"),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Slider(
-                          value: currentSliderValue,
-                          max: 100,
-                          divisions: 100,
-                          label: currentSliderValue.round().toString(),
-                          onChanged: !_isButtonDisabled ?(double value) {
-                            setState(() {
-                              currentSliderValue = value;
-                            });
-                          }: null
-                        )
-                      ),
-                      Text("${currentSliderValue.round()}%"),
-                    ],
+                  Expanded(
+                    child: Slider(
+                      value: currentSliderValue,
+                      max: 100,
+                      divisions: 100,
+                      label: currentSliderValue.round().toString(),
+                      onChanged: !_isButtonDisabled ?(double value) {
+                        setState(() {
+                          currentSliderValue = value;
+                        });
+                      }: null
+                    )
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: !_isButtonDisabled ?  () async{
-                          try {
-                            setState(() {
-                              _isButtonDisabled = true;
-                            });
-                            var response = await api.update(widget.id, currentSliderValue.toInt());
-                            _isButtonDisabled = false;
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                )
-                            );
-                          }on DioException catch (e) {
-                            setState(() {
-                              _isButtonDisabled = false;
-                            });
-                            if (e.message!.contains('connection errored')) {
-                              var snackBar = SnackBar(
-                                content: Text(S.of(context).error_connection,),
-                                backgroundColor: Colors.red,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                              return;
-                            }
-                          }
-                        }: null,
-                        child: Text(S.of(context).button_update, style: const TextStyle(color: Colors.white),)
-                      )
-                    ],
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  Center(
-                    child: SizedBox(
-                      height: 250,
-                      child: task!.photoId != 0 ? CachedNetworkImage(
-                        imageUrl: "${api.serverAddress}/file/${task!.photoId}",
-                        placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
-                      ): const Text("")
-                    ),
-                  )
-                ]
+                  Text("${currentSliderValue.round()}%"),
+                ],
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: !_isButtonDisabled ?  () async{
+                      try {
+                        setState(() {
+                          _isButtonDisabled = true;
+                        });
+                        // var response = await api.update(widZget.id, currentSliderValue.toInt());
+                        _isButtonDisabled = false;
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const Home(),
+                            )
+                        );
+                      }on DioException catch (e) {
+                        setState(() {
+                          _isButtonDisabled = false;
+                        });
+                        if (e.message!.contains('connection errored')) {
+                          var snackBar = SnackBar(
+                            content: Text(S.of(context).error_connection,),
+                            backgroundColor: Colors.red,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          return;
+                        }
+                      }
+                    }: null,
+                    child: Text(S.of(context).button_update, style: const TextStyle(color: Colors.white),)
+                  )
+                ],
+              ),
+              const Padding(padding: EdgeInsets.all(10)),
+              Center(
+                child: SizedBox(
+                  height: 250,
+                  child: task['PhotoId'] != 0 ? CachedNetworkImage(
+                    imageUrl: "${api.serverAddress}/file/${task['PhotoId']}",
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                  ): const Text("")
+                ),
+              )
+            ]
           ),
         ),
       ):

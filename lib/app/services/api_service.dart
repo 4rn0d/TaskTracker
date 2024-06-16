@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -39,6 +41,7 @@ Future<UserCredential?> signin(String email, String password) async {
         email: email,
         password: password
     );
+    return credential;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       print('No user found for that email.');
@@ -63,41 +66,22 @@ Future<void> update(int id, int value) async {
   }
 }
 
-void getTasks() async {
-  // try {
-  //   isLoading = true;
-  //   var response = await SingletonDio.getDio()
-  //       .get('$renderAddress/api/home/photo');
-  //   for (var task in response.data){
-  //     test.add(Task.fromJson(task));
-  //   }
-  //   isLoading = false;
-  //   return test;
-  // } catch (e) {
-  //   print(e);
-  //   rethrow;
-  // }
-  List<Task> taskList = [];
-  CollectionReference tasksCollection = FirebaseFirestore.instance.collection("Tasks");
-  var results = await tasksCollection.get();
-  var taskDocs = results.docs;
-  for(int i = 0; i >= taskDocs.length; i++){
-    var task = taskDocs[i].data();
-    print(task);
-  }
+Future<List<QueryDocumentSnapshot<Task>>> getTasks() async {
+  final ref = FirebaseFirestore.instance.collection("Tasks").withConverter(
+      fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
+  );
+  final docSnap = await ref.get();
+  print(docSnap.docs[0].id);
+  return docSnap.docs;
 }
 
-Future<Task> getDetail(int id) async {
-  try {
-    isLoading = true;
-    var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/detail/photo/$id');
-    isLoading = false;
-    return Task.fromJson(response.data);
-  } catch (e) {
-    print(e);
-    rethrow;
-  }
+Future<DocumentSnapshot<Task>> getDetail(String id) async {
+  final ref = FirebaseFirestore.instance.collection("Tasks").doc(id).withConverter(
+      fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
+  );
+  final docSnap = await ref.get();
+  // final task = docSnap.data();
+  return docSnap;
 }
 
 Future<void> addTask(AddTask req) async {
