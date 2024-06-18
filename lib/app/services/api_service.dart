@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:tp1/app/DTO/add_task.dart';
@@ -58,6 +59,15 @@ Future<UserCredential?> signin(String type, [String? email, String? password]) a
       );
       return credential;
     }
+    if (type == "facebook"){
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success) {
+        // Create a credential from the access token
+        final credential = await FacebookAuthProvider.credential(result.accessToken!.tokenString);
+        return await FirebaseAuth.instance.signInWithCredential(credential);
+      }
+    }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       print('No user found for that email.');
@@ -74,16 +84,18 @@ Future<void> signout() async {
 }
 
 Future<void> update(String id, int value) async {
-  final taskRef = db.collection("Tasks").doc(id);
+  User? user = FirebaseAuth.instance.currentUser;
+  final taskRef = db.collection('users').doc(user!.uid).collection("tasks").doc(id);
   taskRef.update({"Progression": value}).then(
           (value) => print("DocumentSnapshot successfully updated!"),
       onError: (e) => print("Error updating document $e"));
 }
 
 Future<List<Task>> getTasks() async {
+  User? user = FirebaseAuth.instance.currentUser;
   isLoading = true;
   List<Task> taskList = [];
-  final ref = db.collection("Tasks").withConverter(
+  final ref = db.collection("users").doc(user!.uid).collection("tasks").withConverter(
       fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
   );
   var querySnapshot = await ref.get();
@@ -99,8 +111,9 @@ Future<List<Task>> getTasks() async {
 }
 
 Future<Task?> getDetail(String id) async {
+  User? user = FirebaseAuth.instance.currentUser;
   isLoading = true;
-  final ref = db.collection("Tasks").doc(id).withConverter(
+  final ref = db.collection("users").doc(user!.uid).collection("tasks").doc(id).withConverter(
       fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
   );
   final docSnap = await ref.get();
@@ -114,7 +127,8 @@ Future<Task?> getDetail(String id) async {
 }
 
 Future<void> addTask(AddTask req) async {
-  CollectionReference taskReference = db.collection('Tasks');
+  User? user = FirebaseAuth.instance.currentUser;
+  CollectionReference taskReference = db.collection('users').doc(user!.uid).collection("tasks");
   taskReference.add({
     'Name': req.name,
     'Deadline': DateTime.parse(req.deadline),

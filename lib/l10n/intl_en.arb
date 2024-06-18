@@ -2,7 +2,7 @@
   "@@locale": "en",
   "code":"en",
   "title_login": "Login",
-  "hint_username": "Username",
+  "hint_email": "Email",
   "validation_empty": "The field cannot be empty",
   "hint_password": "Password",
   "error_connection": "A connection error as occured",

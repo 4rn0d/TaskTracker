@@ -70,11 +70,11 @@ class S {
     );
   }
 
-  /// `Username`
-  String get hint_username {
+  /// `Email`
+  String get hint_email {
     return Intl.message(
-      'Username',
-      name: 'hint_username',
+      'Email',
+      name: 'hint_email',
       desc: '',
       args: [],
     );

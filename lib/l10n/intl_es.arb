@@ -2,7 +2,7 @@
   "@@locale": "es",
   "code":"es",
   "title_login": "Iniciar sesión",
-  "hint_username": "Nombre de usuario",
+  "hint_email": "Correo electrónico",
   "validation_empty": "El campo no puede estar vacío",
   "hint_password": "Contraseña",
   "error_connection": "Ha ocurrido un error de conexión",

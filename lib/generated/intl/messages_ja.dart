@@ -34,9 +34,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ユーザー名は既に使用されています"),
         "hint_confirmPassword":
             MessageLookupByLibrary.simpleMessage("パスワードを確認"),
+        "hint_email": MessageLookupByLibrary.simpleMessage(" 電子メール"),
         "hint_password": MessageLookupByLibrary.simpleMessage("パスワード"),
         "hint_taskName": MessageLookupByLibrary.simpleMessage("タスク名"),
-        "hint_username": MessageLookupByLibrary.simpleMessage("ユーザー名"),
         "task_deadline": MessageLookupByLibrary.simpleMessage("締め切り: "),
         "task_name": MessageLookupByLibrary.simpleMessage("タスク名 ： "),
         "task_progress": MessageLookupByLibrary.simpleMessage("タスクの進行状況: "),

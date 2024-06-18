@@ -35,11 +35,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Le nom d\'utilisateur est déjà pris"),
         "hint_confirmPassword":
             MessageLookupByLibrary.simpleMessage("Confirmer le mot de passe"),
+        "hint_email": MessageLookupByLibrary.simpleMessage("Email"),
         "hint_password": MessageLookupByLibrary.simpleMessage("Mot de passe"),
         "hint_taskName":
             MessageLookupByLibrary.simpleMessage("Nom de la tâche"),
-        "hint_username":
-            MessageLookupByLibrary.simpleMessage("Nom d\'utilisateur"),
         "task_deadline": MessageLookupByLibrary.simpleMessage("Échéance : "),
         "task_name": MessageLookupByLibrary.simpleMessage("Nom de la tâche"),
         "task_progress":

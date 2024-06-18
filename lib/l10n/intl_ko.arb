@@ -2,7 +2,7 @@
   "@@locale": "ko",
   "code":"ko",
   "title_login": "로그인",
-  "hint_username": "사용자 이름",
+  "hint_email": "이메일",
   "validation_empty": "필드를 비워둘 수 없습니다",
   "hint_password": "비밀번호",
   "error_connection": "연결 오류가 발생했습니다",

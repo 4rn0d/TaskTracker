@@ -33,9 +33,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_usernameTaken":
             MessageLookupByLibrary.simpleMessage("사용자 이름이 이미 사용중입니다"),
         "hint_confirmPassword": MessageLookupByLibrary.simpleMessage("비밀번호 확인"),
+        "hint_email": MessageLookupByLibrary.simpleMessage("이메일"),
         "hint_password": MessageLookupByLibrary.simpleMessage("비밀번호"),
         "hint_taskName": MessageLookupByLibrary.simpleMessage("작업 이름"),
-        "hint_username": MessageLookupByLibrary.simpleMessage("사용자 이름"),
         "task_deadline": MessageLookupByLibrary.simpleMessage("마감 기한: "),
         "task_name": MessageLookupByLibrary.simpleMessage("작업 이름 : "),
         "task_progress": MessageLookupByLibrary.simpleMessage("작업 진행 상황: "),

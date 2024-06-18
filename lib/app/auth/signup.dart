@@ -58,7 +58,7 @@ class SignupState extends State<Signup> {
                             enabled: !_isButtonDisabled,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
-                              labelText: S.of(context).hint_username,
+                              labelText: S.of(context).hint_email,
                                 errorText: _validateUsername ? S.of(context).validation_empty : null
                             ),
                           ),

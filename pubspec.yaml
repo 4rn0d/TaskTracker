@@ -57,6 +57,7 @@ dependencies:
   sign_in_button: ^3.2.0
   sign_button: ^2.0.6
   google_sign_in: ^6.2.1
+  flutter_facebook_auth: ^7.0.0
 
 dev_dependencies:
   flutter_test:

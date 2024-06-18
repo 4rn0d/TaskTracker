@@ -2,7 +2,7 @@
   "@@locale": "ja",
   "code":"ja",
   "title_login": "ログイン",
-  "hint_username": "ユーザー名",
+  "hint_email": " 電子メール",
   "validation_empty": "フィールドは空にできません",
   "hint_password": "パスワード",
   "error_connection": "接続エラーが発生しました",

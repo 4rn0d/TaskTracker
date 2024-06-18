@@ -2,7 +2,7 @@
   "@@locale": "fr",
   "code":"fr",
   "title_login": "Connexion",
-  "hint_username": "Nom d'utilisateur",
+  "hint_email": "Email",
   "validation_empty": "Le champ ne peut pas être vide",
   "hint_password": "Mot de passe",
   "error_connection": "Une erreur de connexion s'est produite",

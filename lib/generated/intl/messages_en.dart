@@ -34,9 +34,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "The username is already taken"),
         "hint_confirmPassword":
             MessageLookupByLibrary.simpleMessage("Confirm Password"),
+        "hint_email": MessageLookupByLibrary.simpleMessage("Email"),
         "hint_password": MessageLookupByLibrary.simpleMessage("Password"),
         "hint_taskName": MessageLookupByLibrary.simpleMessage("Task name"),
-        "hint_username": MessageLookupByLibrary.simpleMessage("Username"),
         "task_deadline": MessageLookupByLibrary.simpleMessage("Deadline : "),
         "task_name": MessageLookupByLibrary.simpleMessage("Task\'s name : "),
         "task_progress":
