@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sign_button/sign_button.dart';
 import 'package:tp1/app/DTO/signin_request.dart';
 import 'package:tp1/app/auth/signup.dart';
 import 'package:tp1/app/home.dart';
@@ -94,7 +95,7 @@ class SigninState extends State<Signin> {
                                 _validatePassword = _passwordController.text.isEmpty;
                               });
                               if (!_validatePassword && !_validateUsername) {
-                                var response = await api.signin(_emailController.text, _passwordController.text);
+                                var response = await api.signin("email", _emailController.text, _passwordController.text);
                                 FirebaseAuth.instance
                                     .authStateChanges()
                                     .listen((User? user) {
@@ -110,7 +111,7 @@ class SigninState extends State<Signin> {
                                     );
                                   }
                                 });
-                                                            }
+                              }
                               _isButtonDisabled = false;
                             }on DioException catch (e) {
                               setState(() {
@@ -142,16 +143,76 @@ class SigninState extends State<Signin> {
                           child: Text(S.of(context).button_signup,),
                         ),
                       ),
+                      const Padding(padding: EdgeInsets.all(10)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SignInButton.mini(
+                            buttonType: ButtonType.google,
+                            buttonSize: ButtonSize.large,
+                            onPressed: !_isButtonDisabled ? () async {
+                              var response = await api.signin("google");
+                              FirebaseAuth.instance
+                                  .authStateChanges()
+                                  .listen((User? user) {
+                                if (user == null) {
+                                  setState(() {
+                                    _isButtonDisabled = false;
+                                  });
+                                } else {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => const Home(),
+                                      )
+                                  );
+                                }
+                              });
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const Signup(),
+                                  )
+                              );
+                            }: null,
+                          ),
+                          SignInButton.mini(
+                            buttonType: ButtonType.github,
+                            buttonSize: ButtonSize.large,
+                            onPressed: !_isButtonDisabled ? () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const Signup(),
+                                  )
+                              );
+                            }: null,
+                          ),
+                          SignInButton.mini(
+                            buttonType: ButtonType.facebook,
+                            buttonSize: ButtonSize.large,
+                            onPressed: !_isButtonDisabled ? () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const Signup(),
+                                  )
+                              );
+                            }: null,
+                          ),
+                          SignInButton.mini(
+                            buttonType: ButtonType.microsoft,
+                            buttonSize: ButtonSize.large,
+                            onPressed: !_isButtonDisabled ? () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const Signup(),
+                                  )
+                              );
+                            }: null,
+                          ),
+                        ],
+                      )
                     ],
                   )
                 ],
               ),
-              ElevatedButton(
-                  onPressed: (){
-                api.getTasks();
-              },
-                  child: Text("testetstset")
-              )
             ],
           ),
         ),

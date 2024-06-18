@@ -5,12 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:tp1/app/DTO/add_task.dart';
-import 'package:tp1/app/DTO/signin_request.dart';
-import 'package:tp1/app/DTO/signin_response.dart';
-import 'package:tp1/app/DTO/signup_request.dart';
 import 'package:tp1/app/models/task.dart';
 
 String user = "erreur";
@@ -19,12 +16,13 @@ String renderAddress = "https://kickmya-sserver.onrender.com";
 bool isLoading = false;
 final db = FirebaseFirestore.instance;
 
-Future<UserCredential?> signup(String email, String password) async {
+Future<UserCredential?> signup(String? email, String? password) async {
   try {
     final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
+      email: email!,
+      password: password!,
     );
+    user = credential.user!.email!;
     return credential;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
@@ -38,13 +36,28 @@ Future<UserCredential?> signup(String email, String password) async {
   return null;
 }
 
-Future<UserCredential?> signin(String email, String password) async {
+Future<UserCredential?> signin(String type, [String? email, String? password]) async {
   try {
-    final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password
-    );
-    return credential;
+    if (type == "google"){
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication? googleAuth =
+      await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    }
+    if (type == "email"){
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email!,
+          password: password!
+      );
+      return credential;
+    }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       print('No user found for that email.');
@@ -56,6 +69,7 @@ Future<UserCredential?> signin(String email, String password) async {
 }
 
 Future<void> signout() async {
+  await GoogleSignIn().signOut();
   await FirebaseAuth.instance.signOut();
 }
 
@@ -64,12 +78,6 @@ Future<void> update(String id, int value) async {
   taskRef.update({"Progression": value}).then(
           (value) => print("DocumentSnapshot successfully updated!"),
       onError: (e) => print("Error updating document $e"));
-  // CollectionReference taskReference = db.collection('Tasks');
-  // DocumentReference taskDoc = taskReference.doc(id);
-  // taskDoc.set({
-  //   'Progression': value.toString()
-  // });
-  // print(taskDoc);
 }
 
 Future<List<Task>> getTasks() async {

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
@@ -25,9 +26,10 @@ class MenuState extends State<Menu> {
             color: AppTheme.accentColor
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
                     height: 100,
@@ -36,14 +38,8 @@ class MenuState extends State<Menu> {
                         child: const Image(
                             image: NetworkImage('https://steamuserimages-a.akamaihd.net/ugc/2053129740384007681/008613159A03A2D9A1A38C0F66FC3F3CBCF73C9C/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false')                  ),
                       ),
-                  )
-                ],
-              ),
-              const Padding(padding: EdgeInsets.all(10)),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(api.user, style: const TextStyle(color: Colors.white),),
+                  ),
+                  Text(FirebaseAuth.instance.currentUser!.email!, style: const TextStyle(color: Colors.white),),
                 ],
               ),
             ],
