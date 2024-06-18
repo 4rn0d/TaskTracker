@@ -71,7 +71,7 @@ class DetailsState extends State<Details> {
         'ImageURL': imageURL
       });
       setState(() {
-        photo = imageURL;
+        task.imageURL = imageURL;
       });
     }
   }

@@ -23,6 +23,7 @@ class HomeState extends State<Home> {
   void _getTasks() async{
     try {
       tasks = await api.getTasks();
+      tasks.sort((a, b) => a.deadline.compareTo(b.deadline));
       setState(() {});
     } catch(e){
       print(e);
