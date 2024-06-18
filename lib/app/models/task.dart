@@ -9,7 +9,7 @@ class Task {
   late int percentageDone;
   late int percentageTimeSpent;
   late DateTime deadline;
-  late int photoId;
+  late String imageURL;
 
   Task({
     required this.id,
@@ -17,7 +17,7 @@ class Task {
     required this.percentageDone,
     required this.percentageTimeSpent,
     required this.deadline,
-    required this.photoId,
+    required this.imageURL,
   });
 
   @JsonKey(fromJson: _fromJson)
@@ -27,7 +27,7 @@ class Task {
         percentageDone = json['percentageDone'],
         percentageTimeSpent = json['percentageTimeSpent'],
         deadline = _fromJson(json['deadline']),
-        photoId = json['photoId'];
+        imageURL = json['ImageURL'];
 
   factory Task.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -40,7 +40,7 @@ class Task {
           percentageDone: data?['Progression'],
           percentageTimeSpent: data?['TimeSpent'],
           deadline: data?['Deadline'].toDate(),
-          photoId: data?['PhotoId']
+          imageURL: data?['ImageURL']
       );
   }
 
@@ -50,7 +50,7 @@ class Task {
       if (percentageDone != null) "Progression": percentageDone,
       if (percentageTimeSpent != null) "TimeSpent": percentageTimeSpent,
       if (deadline != null) "Deadline": deadline,
-      if (photoId != null) "PhotoId": photoId,
+      if (imageURL != null) "ImageURL": imageURL,
     };
   }
 }

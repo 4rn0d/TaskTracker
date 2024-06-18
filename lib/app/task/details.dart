@@ -1,12 +1,15 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tp1/app/home.dart';
-import 'package:tp1/app/models/task.dart';
+import 'package:tp1/app/models/task.dart' as model;
 import 'package:tp1/app/shared/menu.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 import 'package:tp1/generated/l10n.dart';
@@ -22,7 +25,7 @@ class Details extends StatefulWidget {
 }
 
 class DetailsState extends State<Details> {
-  late Task task = Task(id: "loading", name: "", percentageDone: 0, percentageTimeSpent: 0, deadline: DateTime.now(), photoId: 0);
+  late model.Task task = model.Task(id: "loading", name: "", percentageDone: 0, percentageTimeSpent: 0, deadline: DateTime.now(), imageURL: 'none');
   double currentSliderValue = 0;
 
   void _getDetails() async{
@@ -51,29 +54,27 @@ class DetailsState extends State<Details> {
 
   bool _isButtonDisabled = false;
   final picker = ImagePicker();
-
-  Future<String> _sendPicture(String taskID, File file) async {
-    FormData formData = FormData.fromMap({
-      "taskID": taskID,
-      "file": await MultipartFile.fromFile(file.path, filename: "image.jpg")
-    });
-    var url = "${api.serverAddress}/file";
-    var response = await Dio().post(url, data: formData);
-    print(response.data);
-    return response.data;
-  }
+  String photo = '';
 
   Future _getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       _imageFile = File(pickedFile.path);
-      setState(() {});
-      _sendPicture(task.id, _imageFile).then((res) {
-        setState(() {
-          task.photoId = int.parse(res);
-        });
-      }).catchError((err) {
-        print(err);
+
+      User? user = FirebaseAuth.instance.currentUser;
+      final imageDoc = await FirebaseFirestore.instance.collection('users').doc(user!.uid).collection("tasks").doc(task.id);
+      final imageRef = FirebaseStorage.instance.ref('${imageDoc.id}.jpg');
+      await imageRef.putFile(_imageFile);
+      String imageURL = await imageRef.getDownloadURL();
+      print("--------------------------------------------------------------");
+      print(imageURL);
+      await imageDoc.update({
+        'ImageURL': imageURL
+      });
+      print(task.imageURL);
+
+      setState(() {
+        photo = imageURL;
       });
     }
   }
@@ -155,8 +156,8 @@ class DetailsState extends State<Details> {
               Center(
                 child: SizedBox(
                   height: 250,
-                  child: task.photoId != 0 ? CachedNetworkImage(
-                    imageUrl: "${api.serverAddress}/file/${task.photoId}",
+                  child: task.imageURL != 'none' ? CachedNetworkImage(
+                    imageUrl: photo,
                     placeholder: (context, url) => const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Icon(Icons.error),
                   ): const Text("")

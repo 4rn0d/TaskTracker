@@ -126,8 +126,8 @@ class HomeState extends State<Home> {
                                   width: 75,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                      child: tasks[i].photoId != 0 ? CachedNetworkImage(
-                                        imageUrl: "${api.serverAddress}/file/${tasks[i].photoId}",
+                                      child: tasks[i].imageURL != 'none' ? CachedNetworkImage(
+                                        imageUrl: tasks[i].imageURL,
                                         placeholder: (context, url) => const CircularProgressIndicator(),
                                         errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ): const Text("")
