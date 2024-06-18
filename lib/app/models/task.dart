@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +9,7 @@ class Task {
   late String id;
   late String name;
   late int percentageDone;
-  late int percentageTimeSpent;
+  late DateTime creationDate;
   late DateTime deadline;
   late String imageURL;
 
@@ -15,17 +17,27 @@ class Task {
     required this.id,
     required this.name,
     required this.percentageDone,
-    required this.percentageTimeSpent,
+    required this.creationDate,
     required this.deadline,
     required this.imageURL,
   });
+
+  int getTimeSpent() {
+    if (DateTime.now().isAfter(deadline)) {
+      return 100;
+    }
+    int total = deadline.compareTo(creationDate);
+    int spent = creationDate.compareTo(deadline);
+    double percentage = 100.0 * spent / total;
+    return max(percentage.toInt(), 0);
+  }
 
   @JsonKey(fromJson: _fromJson)
   Task.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         percentageDone = json['percentageDone'],
-        percentageTimeSpent = json['percentageTimeSpent'],
+        creationDate = _fromJson(json['CreationDate']),
         deadline = _fromJson(json['deadline']),
         imageURL = json['ImageURL'];
 
@@ -38,8 +50,8 @@ class Task {
           id: snapshot.id,
           name: data?['Name'],
           percentageDone: data?['Progression'],
-          percentageTimeSpent: data?['TimeSpent'],
           deadline: data?['Deadline'].toDate(),
+          creationDate: data?['CreationDate'].toDate(),
           imageURL: data?['ImageURL']
       );
   }
@@ -48,7 +60,7 @@ class Task {
     return {
       if (name != null) "Name": name,
       if (percentageDone != null) "Progression": percentageDone,
-      if (percentageTimeSpent != null) "TimeSpent": percentageTimeSpent,
+      if (creationDate != null) "CreationDate": creationDate,
       if (deadline != null) "Deadline": deadline,
       if (imageURL != null) "ImageURL": imageURL,
     };

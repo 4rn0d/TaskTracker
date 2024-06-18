@@ -25,7 +25,7 @@ class Details extends StatefulWidget {
 }
 
 class DetailsState extends State<Details> {
-  late model.Task task = model.Task(id: "loading", name: "", percentageDone: 0, percentageTimeSpent: 0, deadline: DateTime.now(), imageURL: 'none');
+  late model.Task task = model.Task(id: "loading", name: "", percentageDone: 0, creationDate: DateTime.now(), deadline: DateTime.now(), imageURL: 'none');
   double currentSliderValue = 0;
 
   void _getDetails() async{
@@ -66,13 +66,9 @@ class DetailsState extends State<Details> {
       final imageRef = FirebaseStorage.instance.ref('${imageDoc.id}.jpg');
       await imageRef.putFile(_imageFile);
       String imageURL = await imageRef.getDownloadURL();
-      print("--------------------------------------------------------------");
-      print(imageURL);
       await imageDoc.update({
         'ImageURL': imageURL
       });
-      print(task.imageURL);
-
       setState(() {
         photo = imageURL;
       });
@@ -99,7 +95,7 @@ class DetailsState extends State<Details> {
             children: [
               Text("${S.of(context).task_name}${task.name}"),
               Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(task.deadline)}"),
-              Text("${S.of(context).task_timeProgression}${task.percentageTimeSpent}%"),
+              Text("${S.of(context).task_timeProgression}${task.getTimeSpent()}%"),
               Row(
                 children: [
                   Expanded(

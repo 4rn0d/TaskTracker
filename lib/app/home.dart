@@ -25,6 +25,7 @@ class HomeState extends State<Home> {
       tasks = await api.getTasks();
       setState(() {});
     } catch(e){
+      print(e);
       var snackBar = SnackBar(
         content: Text(
           S.of(context).error_connection,
@@ -115,7 +116,7 @@ class HomeState extends State<Home> {
                                 Row(
                                   children: [
                                     const Icon(Icons.hourglass_bottom),
-                                    Text("${S.of(context).task_timeProgression}${tasks[i].percentageTimeSpent}%"),
+                                    Text("${S.of(context).task_timeProgression}${tasks[i].getTimeSpent()}%"),
                                   ],
                                 ),
                               ],

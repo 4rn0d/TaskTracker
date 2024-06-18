@@ -133,7 +133,7 @@ Future<void> addTask(AddTask req) async {
     'Name': req.name,
     'Deadline': DateTime.parse(req.deadline),
     'Progression': 0,
-    'TimeSpent': 0,
+    'CreationDate': DateTime.now(),
     'ImageURL': 'none',
   });
 }
