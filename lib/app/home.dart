@@ -18,7 +18,7 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
 
-  var tasks = [];
+  late List<Task> tasks = [];
 
   void _getTasks() async{
     try {
@@ -46,7 +46,9 @@ class HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _getTasks();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getTasks();
+    });
   }
 
   @override
@@ -54,7 +56,7 @@ class HomeState extends State<Home> {
     return Scaffold(
         drawer: const Menu(),
         appBar: AppBar(
-          title: Text(S.of(context)!.title_home),
+          title: Text(S.of(context).title_home),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -66,7 +68,7 @@ class HomeState extends State<Home> {
           },
           child: const Icon(Icons.add),
         ),
-        body: !api.isLoading
+        body: tasks.isNotEmpty
         ? Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.builder(
@@ -89,7 +91,7 @@ class HomeState extends State<Home> {
                       children: [
                         Row(
                           children: [
-                            Expanded(child: Text(tasks[i]['Name'], style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)),
+                            Expanded(child: Text(tasks[i].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)),
                           ],
                         ),
                         Row(
@@ -101,19 +103,19 @@ class HomeState extends State<Home> {
                                 Row(
                                   children: [
                                     const Icon(Icons.check),
-                                    Text("${S.of(context).task_progress}${tasks[i]['Progression']}%"),
+                                    Text("${S.of(context).task_progress}${tasks[i].percentageDone}%"),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     const Icon(Icons.access_time),
-                                    Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(tasks[i]['Deadline'].toDate())}"),
+                                    Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(tasks[i].deadline)}"),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     const Icon(Icons.hourglass_bottom),
-                                    Text("${S.of(context).task_timeProgression}${tasks[i]['TimeSpent']}%"),
+                                    Text("${S.of(context).task_timeProgression}${tasks[i].percentageTimeSpent}%"),
                                   ],
                                 ),
                               ],
@@ -124,8 +126,8 @@ class HomeState extends State<Home> {
                                   width: 75,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                      child: tasks[i]['PhotoId'] != 0 ? CachedNetworkImage(
-                                        imageUrl: "${api.serverAddress}/file/${tasks[i]['PhotoId']}",
+                                      child: tasks[i].photoId != 0 ? CachedNetworkImage(
+                                        imageUrl: "${api.serverAddress}/file/${tasks[i].photoId}",
                                         placeholder: (context, url) => const CircularProgressIndicator(),
                                         errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ): const Text("")

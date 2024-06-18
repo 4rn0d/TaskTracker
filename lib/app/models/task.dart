@@ -36,11 +36,11 @@ class Task {
       final data = snapshot.data();
       return Task(
           id: snapshot.id,
-          name: data?['name'],
-          percentageDone: data?['percentageDone'],
-          percentageTimeSpent: data?['percentageTimeSpent'],
-          deadline: data?['deadline'].toDate(),
-          photoId: data?['photoId']
+          name: data?['Name'],
+          percentageDone: data?['Progression'],
+          percentageTimeSpent: data?['TimeSpent'],
+          deadline: data?['Deadline'].toDate(),
+          photoId: data?['PhotoId']
       );
   }
 
@@ -48,7 +48,7 @@ class Task {
     return {
       if (name != null) "Name": name,
       if (percentageDone != null) "Progression": percentageDone,
-      if (percentageTimeSpent != null) "TimeSince": percentageTimeSpent,
+      if (percentageTimeSpent != null) "TimeSpent": percentageTimeSpent,
       if (deadline != null) "Deadline": deadline,
       if (photoId != null) "PhotoId": photoId,
     };

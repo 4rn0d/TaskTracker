@@ -280,10 +280,10 @@ class S {
     );
   }
 
-  /// `Task's name :`
+  /// `Task's name : `
   String get task_name {
     return Intl.message(
-      'Task\'s name :',
+      'Task\'s name : ',
       name: 'task_name',
       desc: '',
       args: [],

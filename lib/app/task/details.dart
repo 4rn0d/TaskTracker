@@ -22,31 +22,37 @@ class Details extends StatefulWidget {
 }
 
 class DetailsState extends State<Details> {
-  var task;
+  late Task task = Task(id: "loading", name: "", percentageDone: 0, percentageTimeSpent: 0, deadline: DateTime.now(), photoId: 0);
   double currentSliderValue = 0;
 
   void _getDetails() async{
     try {
-      task = await api.getDetail(widget.id);
-      currentSliderValue = task['Progression'];
+      task = (await api.getDetail(widget.id))!;
+      print(task.name);
+      currentSliderValue = task.percentageDone.toDouble();
+      print(currentSliderValue);
       setState(() {});
     }catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(S.of(context).error_connection)));
+      print(e);
     }
   }
   var _imageFile;
 
   @override
   void initState() {
-    _getDetails();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getDetails();
+    });
+
   }
 
   bool _isButtonDisabled = false;
   final picker = ImagePicker();
 
-  Future<String> _sendPicture(int taskID, File file) async {
+  Future<String> _sendPicture(String taskID, File file) async {
     FormData formData = FormData.fromMap({
       "taskID": taskID,
       "file": await MultipartFile.fromFile(file.path, filename: "image.jpg")
@@ -62,9 +68,9 @@ class DetailsState extends State<Details> {
     if (pickedFile != null) {
       _imageFile = File(pickedFile.path);
       setState(() {});
-      _sendPicture(task!.id, _imageFile).then((res) {
+      _sendPicture(task.id, _imageFile).then((res) {
         setState(() {
-          task!.photoId = int.parse(res);
+          task.photoId = int.parse(res);
         });
       }).catchError((err) {
         print(err);
@@ -83,16 +89,16 @@ class DetailsState extends State<Details> {
         onPressed: _getImage,
         child: const Icon(Icons.add_a_photo),
       ),
-      body: !api.isLoading
+      body: task.id != "loading"
       ? SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(S.of(context).task_name+ "${task['Name']}"),
-              Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(task['Deadline'].toDate())}"),
-              Text("${S.of(context).task_timeProgression}${task['TimeSpent']}%"),
+              Text("${S.of(context).task_name}${task.name}"),
+              Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(task.deadline)}"),
+              Text("${S.of(context).task_timeProgression}${task.percentageTimeSpent}%"),
               Row(
                 children: [
                   Expanded(
@@ -149,8 +155,8 @@ class DetailsState extends State<Details> {
               Center(
                 child: SizedBox(
                   height: 250,
-                  child: task['PhotoId'] != 0 ? CachedNetworkImage(
-                    imageUrl: "${api.serverAddress}/file/${task['PhotoId']}",
+                  child: task.photoId != 0 ? CachedNetworkImage(
+                    imageUrl: "${api.serverAddress}/file/${task.photoId}",
                     placeholder: (context, url) => const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Icon(Icons.error),
                   ): const Text("")

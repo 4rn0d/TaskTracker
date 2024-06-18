@@ -38,7 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_taskName": MessageLookupByLibrary.simpleMessage("Task name"),
         "hint_username": MessageLookupByLibrary.simpleMessage("Username"),
         "task_deadline": MessageLookupByLibrary.simpleMessage("Deadline : "),
-        "task_name": MessageLookupByLibrary.simpleMessage("Task\'s name :"),
+        "task_name": MessageLookupByLibrary.simpleMessage("Task\'s name : "),
         "task_progress":
             MessageLookupByLibrary.simpleMessage("Task progression : "),
         "task_timeProgression":

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
 import 'package:tp1/app/DTO/add_task.dart';
 import 'package:tp1/app/DTO/signin_request.dart';
@@ -16,6 +17,7 @@ String user = "erreur";
 String serverAddress = "http://10.0.2.2:8080";
 String renderAddress = "https://kickmya-sserver.onrender.com";
 bool isLoading = false;
+final db = FirebaseFirestore.instance;
 
 Future<UserCredential?> signup(String email, String password) async {
   try {
@@ -58,7 +60,7 @@ Future<void> signout() async {
 }
 
 Future<void> update(String id, int value) async {
-  CollectionReference taskReference = FirebaseFirestore.instance.collection('Tasks');
+  CollectionReference taskReference = db.collection('Tasks');
   DocumentReference taskDoc = taskReference.doc(id);
   taskDoc.set({
     'Progression': value.toString()
@@ -66,27 +68,41 @@ Future<void> update(String id, int value) async {
   print(taskDoc);
 }
 
-Future<List<QueryDocumentSnapshot<Task>>> getTasks() async {
-  final ref = FirebaseFirestore.instance.collection("Tasks").withConverter(
+Future<List<Task>> getTasks() async {
+  isLoading = true;
+  List<Task> taskList = [];
+  final ref = db.collection("Tasks").withConverter(
       fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
   );
-  final docSnap = await ref.get();
-  print(docSnap.docs[0].id);
-  return docSnap.docs;
+  var querySnapshot = await ref.get();
+
+  print("Successfully completed");
+  for (var docSnapshot in querySnapshot.docs) {
+    taskList.add(docSnapshot.data());
+  }
+
+  isLoading = false;
+  print(taskList);
+  return taskList;
 }
 
-Future<DocumentSnapshot<Task>> getDetail(String id) async {
+Future<Task?> getDetail(String id) async {
   isLoading = true;
-  final ref = FirebaseFirestore.instance.collection("Tasks").doc(id).withConverter(
+  final ref = db.collection("Tasks").doc(id).withConverter(
       fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
   );
   final docSnap = await ref.get();
-  isLoading = false;
-  return docSnap;
+  final task = docSnap.data();
+  if (task != null) {
+    isLoading = false;
+    return task;
+  }
+  print("No such document.");
+  return task;
 }
 
 Future<void> addTask(AddTask req) async {
-  CollectionReference taskReference = FirebaseFirestore.instance.collection('Tasks');
+  CollectionReference taskReference = db.collection('Tasks');
   taskReference.add({
     'Name': req.name,
     'Deadline': DateTime.parse(req.deadline),
