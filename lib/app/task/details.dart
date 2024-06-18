@@ -46,6 +46,7 @@ class DetailsState extends State<Details> {
   @override
   void initState() {
     super.initState();
+    photo = task.imageURL;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getDetails();
     });
@@ -153,7 +154,7 @@ class DetailsState extends State<Details> {
                 child: SizedBox(
                   height: 250,
                   child: task.imageURL != 'none' ? CachedNetworkImage(
-                    imageUrl: photo,
+                    imageUrl: photo == 'none' ? task.imageURL: photo,
                     placeholder: (context, url) => const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Icon(Icons.error),
                   ): const Text("")

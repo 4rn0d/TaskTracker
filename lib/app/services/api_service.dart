@@ -129,13 +129,21 @@ Future<Task?> getDetail(String id) async {
 Future<void> addTask(AddTask req) async {
   User? user = FirebaseAuth.instance.currentUser;
   CollectionReference taskReference = db.collection('users').doc(user!.uid).collection("tasks");
-  taskReference.add({
-    'Name': req.name,
-    'Deadline': DateTime.parse(req.deadline),
-    'Progression': 0,
-    'CreationDate': DateTime.now(),
-    'ImageURL': 'none',
-  });
+  var query = taskReference.where("Name", isEqualTo: req.name);
+  var q = await query.get();
+  int length = q.docs.length;
+  if (length == 0){
+    taskReference.add({
+      'Name': req.name,
+      'Deadline': DateTime.parse(req.deadline),
+      'Progression': 0,
+      'CreationDate': DateTime.now(),
+      'ImageURL': 'none',
+    });
+  }
+  else{
+    throw Exception("There is already a task with this name");
+  }
 }
 
 class SingletonDio {

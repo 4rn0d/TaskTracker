@@ -114,13 +114,27 @@ class CreateState extends State<Create> {
                           else{
                             addTask.deadline = _dateController.text;
                           }
-                          var response = await api.addTask(addTask);
-                          _isButtonDisabled = false;
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const Home(),
-                            )
-                          );
+                          try{
+                            var response = await api.addTask(addTask);
+                            _isButtonDisabled = false;
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const Home(),
+                                )
+                            );
+                          } on Exception catch(e){
+                            setState(() {
+                              _isButtonDisabled = false;
+                            });
+                            var snackBar = SnackBar(
+                              content: Text(
+                                e.toString(),
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.red,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }
                         }
                         _isButtonDisabled = false;
 
