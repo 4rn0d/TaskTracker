@@ -74,14 +74,14 @@ class CreateState extends State<Create> {
                                 decoration: InputDecoration(
                                     prefixIcon: const Icon(Icons.calendar_today),
                                     border: const OutlineInputBorder(),
-                                    labelText:  DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                                    labelText:  DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1))),
                                 ),
                                 readOnly: true,
                                 onTap: () async {
                                   DateTime? pickedDate = await showDatePicker(
                                     context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate:DateTime.now(),
+                                    initialDate: DateTime.now().add(const Duration(days: 1)),
+                                    firstDate:DateTime.now().add(const Duration(days: 1)),
                                     lastDate: DateTime(2101)
                                   );
                                   if(pickedDate != null ){
