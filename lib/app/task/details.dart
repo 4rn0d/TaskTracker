@@ -126,7 +126,7 @@ class DetailsState extends State<Details> {
                         setState(() {
                           _isButtonDisabled = true;
                         });
-                        // var response = await api.update(widZget.id, currentSliderValue.toInt());
+                        var response = await api.update(widget.id, currentSliderValue.toInt());
                         _isButtonDisabled = false;
                         Navigator.of(context).pushReplacement(
                             MaterialPageRoute(

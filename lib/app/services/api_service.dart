@@ -60,12 +60,16 @@ Future<void> signout() async {
 }
 
 Future<void> update(String id, int value) async {
-  CollectionReference taskReference = db.collection('Tasks');
-  DocumentReference taskDoc = taskReference.doc(id);
-  taskDoc.set({
-    'Progression': value.toString()
-  });
-  print(taskDoc);
+  final taskRef = db.collection("Tasks").doc(id);
+  taskRef.update({"Progression": value}).then(
+          (value) => print("DocumentSnapshot successfully updated!"),
+      onError: (e) => print("Error updating document $e"));
+  // CollectionReference taskReference = db.collection('Tasks');
+  // DocumentReference taskDoc = taskReference.doc(id);
+  // taskDoc.set({
+  //   'Progression': value.toString()
+  // });
+  // print(taskDoc);
 }
 
 Future<List<Task>> getTasks() async {
