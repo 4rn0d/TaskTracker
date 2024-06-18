@@ -23,7 +23,7 @@ class MenuState extends State<Menu> {
       children: [
         DrawerHeader(
           decoration: const BoxDecoration(
-            color: AppTheme.accentColor
+            color: Color(0xff00A294)
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
