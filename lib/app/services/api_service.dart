@@ -7,7 +7,6 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl/intl.dart';
 import 'package:tp1/app/DTO/add_task.dart';
 import 'package:tp1/app/models/task.dart';
 
@@ -58,15 +57,6 @@ Future<UserCredential?> signin(String type, [String? email, String? password]) a
           password: password!
       );
       return credential;
-    }
-    if (type == "facebook"){
-      final LoginResult result = await FacebookAuth.instance.login();
-
-      if (result.status == LoginStatus.success) {
-        // Create a credential from the access token
-        final credential = await FacebookAuthProvider.credential(result.accessToken!.tokenString);
-        return await FirebaseAuth.instance.signInWithCredential(credential);
-      }
     }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {

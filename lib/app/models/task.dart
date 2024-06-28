@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -58,11 +57,11 @@ class Task {
 
   Map<String, dynamic> toFirestore() {
     return {
-      if (name != null) "Name": name,
-      if (percentageDone != null) "Progression": percentageDone,
-      if (creationDate != null) "CreationDate": creationDate,
-      if (deadline != null) "Deadline": deadline,
-      if (imageURL != null) "ImageURL": imageURL,
+      "Name": name,
+      "Progression": percentageDone,
+      "CreationDate": creationDate,
+      "Deadline": deadline,
+      "ImageURL": imageURL,
     };
   }
 }

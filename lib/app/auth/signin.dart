@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sign_button/sign_button.dart';
-import 'package:tp1/app/DTO/signin_request.dart';
 import 'package:tp1/app/auth/signup.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/services/api_service.dart' as api;

@@ -63,7 +63,7 @@ class DetailsState extends State<Details> {
       _imageFile = File(pickedFile.path);
 
       User? user = FirebaseAuth.instance.currentUser;
-      final imageDoc = await FirebaseFirestore.instance.collection('users').doc(user!.uid).collection("tasks").doc(task.id);
+      final imageDoc = FirebaseFirestore.instance.collection('users').doc(user!.uid).collection("tasks").doc(task.id);
       final imageRef = FirebaseStorage.instance.ref('${imageDoc.id}.jpg');
       await imageRef.putFile(_imageFile);
       String imageURL = await imageRef.getDownloadURL();

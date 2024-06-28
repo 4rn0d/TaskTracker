@@ -5,7 +5,6 @@ import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/task/create.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
-import 'package:tp1/app/utils/app_theme.dart';
 import 'package:tp1/generated/l10n.dart';
 
 class Menu extends StatefulWidget {
