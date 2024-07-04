@@ -110,6 +110,26 @@ class S {
     );
   }
 
+  /// `The task name cannot be empty`
+  String get error_emptyName {
+    return Intl.message(
+      'The task name cannot be empty',
+      name: 'error_emptyName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There is already a task with this name`
+  String get error_taskNameTaken {
+    return Intl.message(
+      'There is already a task with this name',
+      name: 'error_taskNameTaken',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Login`
   String get button_login {
     return Intl.message(

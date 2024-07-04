@@ -119,6 +119,9 @@ Future<Task?> getDetail(String id) async {
 Future<void> addTask(AddTask req) async {
   User? user = FirebaseAuth.instance.currentUser;
   CollectionReference taskReference = db.collection('users').doc(user!.uid).collection("tasks");
+  if (req.name.trim() == ""){
+    throw Exception("The task name cannot be empty");
+  }
   var query = taskReference.where("Name", isEqualTo: req.name);
   var q = await query.get();
   int length = q.docs.length;

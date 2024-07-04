@@ -21,7 +21,7 @@
   "hint_taskName": "Nombre de la tarea",
   "button_create": "Crear",
   "title_details": "Detalles",
-  "button_update": "Actualizar tarea : ",
+  "button_update": "Actualizar tarea ",
   "title_signout": "Cerrar sesión",
   "task_name": "Nombre de la tarea : "
 }

@@ -6,6 +6,8 @@
   "validation_empty": "The field cannot be empty",
   "hint_password": "Password",
   "error_connection": "A connection error as occured",
+  "error_emptyName": "The task name cannot be empty",
+  "error_taskNameTaken": "There is already a task with this name",
   "button_login": "Login",
   "button_signup": "Signup",
   "title_signup": "Sign Up",

@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "button_login": MessageLookupByLibrary.simpleMessage("Iniciar sesión"),
         "button_signup": MessageLookupByLibrary.simpleMessage("Registrarse"),
         "button_update":
-            MessageLookupByLibrary.simpleMessage("Actualizar tarea : "),
+            MessageLookupByLibrary.simpleMessage("Actualizar tarea "),
         "code": MessageLookupByLibrary.simpleMessage("es"),
         "error_connection": MessageLookupByLibrary.simpleMessage(
             "Ha ocurrido un error de conexión"),

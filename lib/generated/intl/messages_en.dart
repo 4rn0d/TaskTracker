@@ -29,6 +29,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "code": MessageLookupByLibrary.simpleMessage("en"),
         "error_connection": MessageLookupByLibrary.simpleMessage(
             "A connection error as occured"),
+        "error_emptyName": MessageLookupByLibrary.simpleMessage(
+            "The task name cannot be empty"),
+        "error_taskNameTaken": MessageLookupByLibrary.simpleMessage(
+            "There is already a task with this name"),
         "error_tryAgain": MessageLookupByLibrary.simpleMessage("Try again"),
         "error_usernameTaken": MessageLookupByLibrary.simpleMessage(
             "The username is already taken"),
