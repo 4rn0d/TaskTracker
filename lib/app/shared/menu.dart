@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tp1/app/auth/signin.dart';
 import 'package:tp1/app/home.dart';
 import 'package:tp1/app/task/create.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
+import 'package:tp1/generated/l10n.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -20,12 +22,13 @@ class MenuState extends State<Menu> {
       children: [
         DrawerHeader(
           decoration: const BoxDecoration(
-            color: Colors.deepPurple
+            color: Color(0xff00A294)
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
                     height: 100,
@@ -34,14 +37,8 @@ class MenuState extends State<Menu> {
                         child: const Image(
                             image: NetworkImage('https://steamuserimages-a.akamaihd.net/ugc/2053129740384007681/008613159A03A2D9A1A38C0F66FC3F3CBCF73C9C/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false')                  ),
                       ),
-                  )
-                ],
-              ),
-              const Padding(padding: EdgeInsets.all(10)),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(api.user, style: TextStyle(color: Colors.white),),
+                  ),
+                  Text(FirebaseAuth.instance.currentUser!.email!, style: const TextStyle(color: Colors.white),),
                 ],
               ),
             ],
@@ -50,7 +47,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.home),
-          title: const Text("Accueil"),
+          title: Text(S.of(context).title_home),
           onTap: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -63,7 +60,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.add),
-          title: const Text("Creation"),
+          title: Text(S.of(context).title_create),
             onTap: () {
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -75,7 +72,7 @@ class MenuState extends State<Menu> {
         ListTile(
           dense: true,
           leading: const Icon(Icons.logout),
-          title: const Text("Déconnexion"),
+          title: Text(S.of(context).title_signout),
           onTap: () async {
             try{
               setState(() {

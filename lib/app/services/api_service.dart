@@ -1,103 +1,141 @@
-import 'dart:io';
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tp1/app/DTO/add_task.dart';
-import 'package:tp1/app/DTO/signin_request.dart';
-import 'package:tp1/app/DTO/signin_response.dart';
-import 'package:tp1/app/DTO/signup_request.dart';
 import 'package:tp1/app/models/task.dart';
 
 String user = "erreur";
 String serverAddress = "http://10.0.2.2:8080";
 String renderAddress = "https://kickmya-sserver.onrender.com";
 bool isLoading = false;
+final db = FirebaseFirestore.instance;
 
-Future<SigninResponse> signup(SignupRequest req) async {
+Future<UserCredential?> signup(String? email, String? password) async {
   try {
-    var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signup', data: req.toJson());
-    print(response);
-    var text = response.toString();
-    user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
-    return SigninResponse.fromJson(response.data);
+    final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email!,
+      password: password!,
+    );
+    user = credential.user!.email!;
+    return credential;
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      print('The password provided is too weak.');
+    } else if (e.code == 'email-already-in-use') {
+      print('The account already exists for that email.');
+    }
   } catch (e) {
     print(e);
-    rethrow;
   }
+  return null;
 }
 
-Future<SigninResponse> signin(SigninRequest req) async {
+Future<UserCredential?> signin(String type, [String? email, String? password]) async {
   try {
-    var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signin', data: req.toJson());
-    var text = response.toString();
-    user = text.split(":")[1].split("}")[0].replaceAll("\"", "");
-    print(response);
-    return SigninResponse.fromJson(response.data);
-  } catch (e) {
-    print(e);
-    rethrow;
+    if (type == "google"){
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication? googleAuth =
+      await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    }
+    if (type == "email"){
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email!,
+          password: password!
+      );
+      return credential;
+    }
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      print('No user found for that email.');
+    } else if (e.code == 'wrong-password') {
+      print('Wrong password provided for that user.');
+    }
   }
+  return null;
 }
 
 Future<void> signout() async {
-  try {
-    var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/id/signout');
-  } catch (e) {
-    print(e);
-    rethrow;
-  }
+  await GoogleSignIn().signOut();
+  await FirebaseAuth.instance.signOut();
 }
 
-Future<void> update(int id, int value) async {
-  try {
-    var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/progress/$id/$value');
-  } catch (e) {
-    print(e);
-    rethrow;
-  }
+Future<void> update(String id, int value) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  final taskRef = db.collection('users').doc(user!.uid).collection("tasks").doc(id);
+  taskRef.update({"Progression": value}).then(
+          (value) => print("DocumentSnapshot successfully updated!"),
+      onError: (e) => print("Error updating document $e"));
 }
 
 Future<List<Task>> getTasks() async {
-  try {
-    isLoading = true;
-    var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/home');
-    List<Task> test = [];
-    for (var task in response.data){
-      test.add(Task.fromJson(task));
-    }
-    isLoading = false;
-    return test;
-  } catch (e) {
-    print(e);
-    rethrow;
+  User? user = FirebaseAuth.instance.currentUser;
+  isLoading = true;
+  List<Task> taskList = [];
+  final ref = db.collection("users").doc(user!.uid).collection("tasks").withConverter(
+      fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
+  );
+  var querySnapshot = await ref.get();
+
+  print("Successfully completed");
+  for (var docSnapshot in querySnapshot.docs) {
+    taskList.add(docSnapshot.data());
   }
+
+  isLoading = false;
+  print(taskList);
+  return taskList;
 }
 
-Future<Task> getDetail(int id) async {
-  try {
-    isLoading = true;
-    var response = await SingletonDio.getDio()
-        .get('$renderAddress/api/detail/$id');
+Future<Task?> getDetail(String id) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  isLoading = true;
+  final ref = db.collection("users").doc(user!.uid).collection("tasks").doc(id).withConverter(
+      fromFirestore: Task.fromFirestore, toFirestore: (Task task, _) => task.toFirestore()
+  );
+  final docSnap = await ref.get();
+  final task = docSnap.data();
+  if (task != null) {
     isLoading = false;
-    return Task.fromJson(response.data);
-  } catch (e) {
-    print(e);
-    rethrow;
+    return task;
   }
+  print("No such document.");
+  return task;
 }
 
 Future<void> addTask(AddTask req) async {
-  try {
-    var response = await SingletonDio.getDio()
-        .post('$renderAddress/api/add', data: req.toJson());
-  } catch (e) {
-    print(e);
-    rethrow;
+  User? user = FirebaseAuth.instance.currentUser;
+  CollectionReference taskReference = db.collection('users').doc(user!.uid).collection("tasks");
+  if (req.name.trim() == ""){
+    throw Exception("The task name cannot be empty");
+  }
+  var query = taskReference.where("Name", isEqualTo: req.name);
+  var q = await query.get();
+  int length = q.docs.length;
+  if (length == 0){
+    taskReference.add({
+      'Name': req.name,
+      'Deadline': DateTime.parse(req.deadline),
+      'Progression': 0,
+      'CreationDate': DateTime.now(),
+      'ImageURL': 'none',
+    });
+  }
+  else{
+    throw Exception("There is already a task with this name");
   }
 }
 

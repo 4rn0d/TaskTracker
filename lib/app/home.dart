@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tp1/app/models/task.dart';
@@ -5,6 +6,8 @@ import 'package:tp1/app/shared/menu.dart';
 import 'package:tp1/app/services/api_service.dart' as api;
 import 'package:tp1/app/task/create.dart';
 import 'package:tp1/app/task/details.dart';
+
+import '../generated/l10n.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,22 +18,39 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
 
-  List<Task> tasks = [];
+  late List<Task> tasks = [];
 
-  void getTasks() async{
+  void _getTasks() async{
     try {
       tasks = await api.getTasks();
+      tasks.sort((a, b) => a.deadline.compareTo(b.deadline));
       setState(() {});
-    }catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Erreur reseau')));
+    } catch(e){
+      print(e);
+      var snackBar = SnackBar(
+        content: Text(
+          S.of(context).error_connection,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(days: 365),
+        action: SnackBarAction(
+          label: S.of(context).error_tryAgain,
+          onPressed: () {
+            _getTasks();
+          },
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    getTasks();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getTasks();
+    });
   }
 
   @override
@@ -38,7 +58,7 @@ class HomeState extends State<Home> {
     return Scaffold(
         drawer: const Menu(),
         appBar: AppBar(
-          title: const Text('Accueil'),
+          title: Text(S.of(context).title_home),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -50,7 +70,7 @@ class HomeState extends State<Home> {
           },
           child: const Icon(Icons.add),
         ),
-        body: !api.isLoading
+        body: tasks.isNotEmpty
         ? Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.builder(
@@ -73,22 +93,50 @@ class HomeState extends State<Home> {
                       children: [
                         Row(
                           children: [
-                            Text(tasks[i].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                            Expanded(child: Text(tasks[i].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)),
                           ],
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Progression de la tâche : ${tasks[i].percentageDone}%"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text("Date d'échéance : ${DateFormat.yMMMMd().format(tasks[i].deadline)}"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text("pourcentage de temp écoulé : ${tasks[i].percentageTimeSpent.round()}%"),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(Icons.check),
+                                    Text("${S.of(context).task_progress}${tasks[i].percentageDone}%"),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.access_time),
+                                    Text("${S.of(context).task_deadline}${DateFormat.yMMMMd(S.of(context).code).format(tasks[i].deadline)}"),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.hourglass_bottom),
+                                    Text("${S.of(context).task_timeProgression}${tasks[i].getTimeSpent()}%"),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(
+                                  width: 75,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                      child: tasks[i].imageURL != 'none' ? CachedNetworkImage(
+                                        imageUrl: tasks[i].imageURL,
+                                        placeholder: (context, url) => const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                      ): const Text("")
+                                  ),
+                                )
+                              ],
+                            )
                           ],
                         ),
                       ],

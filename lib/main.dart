@@ -1,22 +1,42 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:tp1/app/task/create.dart';
-import 'package:tp1/app/task/details.dart';
-import 'package:tp1/app/utils/app_theme.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:json_theme/json_theme.dart';
+import 'package:tp1/firebase_options.dart';
 import 'app/auth/signin.dart';
-import 'app/auth/signup.dart';
-import 'app/home.dart';
+import 'generated/l10n.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  final themeStr = await rootBundle.loadString("lib/app/assets/themes/appainter_theme.json");
+  final themeJson = jsonDecode(themeStr);
+  final ThemeData theme = ThemeDecoder.decodeThemeData(themeJson)!;
+
+  runApp(MyApp(theme: theme));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.theme});
+
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Signin(),
+    return MaterialApp(
+      theme: theme,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
+      home: const Signin(),
     );
   }
 }

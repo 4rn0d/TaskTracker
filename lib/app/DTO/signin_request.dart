@@ -1,4 +1,3 @@
-import 'package:tp1/app/DTO/signup_request.dart';
 
 class SigninRequest {
   late String username;
