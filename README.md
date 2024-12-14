@@ -1,16 +1,5 @@
-# tp1
+# TaskTracker
 
-A new Flutter project.
+This is my last college project where I had to build a task tracking app in Flutter with a Firebase backend.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Ceci est mon dernier projet réalisé au cégep. Je devais coder une application de gestion de tâche en Flutter avec un backend Firebase
